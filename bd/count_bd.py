@@ -1,68 +1,33 @@
 import psycopg2
-from config import host, user, password, db_name, port
+from bd.config import host, user, password, db_name, port
 
-try:
-    # connect to exist database
-    connection = psycopg2.connect(
-        host=host,
-        user=user,
-        password=password,
-        database=db_name,
-        port=port
-    )
-    connection.autocommit = True
 
-    # the cursor for perfoming database operations
-    # cursor = connection.cursor()
-
-    with connection.cursor() as cursor:
-        cursor.execute(
-            "SELECT version();"
+def get_connect_heroku_bd(zodiac, id):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name,
+            port=port
         )
+        connection.autocommit = True
 
-        print(f"Server version: {cursor.fetchone()}")
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"""SELECT {zodiac} FROM goroskop WHERE _id = {id};"""
+            )
+            text_cursor_bd = cursor.fetchone()
+            print(text_cursor_bd[0])
+            return text_cursor_bd[0]
 
-    # create a new table
-    # with connection.cursor() as cursor:
-    #     cursor.execute(
-    #         """CREATE TABLE users(
-    #             id serial PRIMARY KEY,
-    #             first_name varchar(50) NOT NULL,
-    #             nick_name varchar(50) NOT NULL);"""
-    #     )
+    except Exception as _ex:
+        print("[INFO] Error while working with PostgreSQL", _ex)
+    finally:
+        if connection:
+            # cursor.close()
+            connection.close()
+            print("[INFO] PostgreSQL connection closed")
 
-    #     # connection.commit()
-    #     print("[INFO] Table created successfully")
-
-    # insert data into a table
-    # with connection.cursor() as cursor:
-    #     cursor.execute(
-    #         """INSERT INTO users (first_name, nick_name) VALUES
-    #         ('Oleg', 'barracuda');"""
-    #     )
-
-    #     print("[INFO] Data was succefully inserted")
-
-    # get data from a table
-    # with connection.cursor() as cursor:
-    #     cursor.execute(
-    #         """SELECT nick_name FROM users WHERE first_name = 'Oleg';"""
-    #     )
-
-    #     print(cursor.fetchone())
-
-    # delete a table
-    # with connection.cursor() as cursor:
-    #     cursor.execute(
-    #         """DROP TABLE users;"""
-    #     )
-
-    #     print("[INFO] Table was deleted")
-
-except Exception as _ex:
-    print("[INFO] Error while working with PostgreSQL", _ex)
-finally:
-    if connection:
-        # cursor.close()
-        connection.close()
-        print("[INFO] PostgreSQL connection closed")
+if __name__ == "__main__":
+    get_connect_heroku_bd(zodiac="Овен", id=id)

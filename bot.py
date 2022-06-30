@@ -9,7 +9,7 @@ from config.config_token import TOKEN
 from wether.wether import open_wether
 from aiogram.utils import executor
 from generator.generator import *
-from bd.count_bd import bd_zapros
+from bd.count_bd import get_connect_heroku_bd
 from markup import markup as nav
 from aiogram import Bot, types
 from datetime import datetime
@@ -122,7 +122,9 @@ async def gor_commands(message: types.Message):
 async def main_commands(message: types.Message):
     global index
     if message.text == 'Получить гороскоп':
-        await message.reply(f'тут будет вывод {index}')
+
+
+        await message.reply(get_connect_heroku_bd(zodiac='Овен', id=index))
 
 
 @dp.message_handler(state=Form.city)
