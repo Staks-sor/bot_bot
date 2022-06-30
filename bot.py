@@ -1,21 +1,20 @@
-from aiogram.contrib.middlewares.logging import LoggingMiddleware
-from aiogram.dispatcher.filters.state import State, StatesGroup
+import asyncio
+from datetime import datetime
+from aiogram import Bot, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from config.config_token import WETHER_TOKEN
-from aiogram.dispatcher.filters import Text
+from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from aiogram.dispatcher import Dispatcher
 from aiogram.dispatcher import FSMContext
-from config.config_token import TOKEN
-from wether.wether import open_wether
+from aiogram.dispatcher.filters import Text
+from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.utils import executor
-from generator.generator import *
-from bd.count_bd import get_connect_heroku_bd
-from markup import markup as nav
-from aiogram import Bot, types
-from datetime import datetime
+from bd.bd_sqlite import get_connect_heroku_bd
+from config.config_token import TOKEN
+from config.config_token import WETHER_TOKEN
 from des.des import *
-import asyncio
-import time
+from generator.generator import *
+from markup import markup as nav
+from wether.wether import open_wether
 
 bot = Bot(token=TOKEN)
 loop = asyncio.get_event_loop()
@@ -36,7 +35,7 @@ async def process_start_command(message: types.Message):
                            reply_markup=nav.mainMenu)
     chat_id = 459830083
     time_user = datetime.now()
-    await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour) \
+    await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour)
                            + ":" + str(time_user.minute))
 
 
@@ -122,9 +121,17 @@ async def gor_commands(message: types.Message):
 async def main_commands(message: types.Message):
     global index
     if message.text == 'Получить гороскоп':
+        await message.reply("Введите свой знак зодиака")
 
 
-        await message.reply(get_connect_heroku_bd(zodiac='Овен', id=index))
+@dp.message_handler()
+async def zodiac_commands(message: types.Message):
+    try:
+        zoc = message.text
+        await message.reply(get_connect_heroku_bd(zodiac=zoc, id=index))
+
+    except Exception:
+        await message.reply("Что блядь знаки зодиака не знаем?")
 
 
 @dp.message_handler(state=Form.city)
@@ -142,7 +149,8 @@ async def sending_messages():
     global index
     while True:
         index += 1
-        await asyncio.sleep(5)
+        await asyncio.sleep(30)
+        # 86400 секунд в сутках
 
 
 if __name__ == '__main__':
