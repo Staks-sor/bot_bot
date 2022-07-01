@@ -128,7 +128,7 @@ async def main_commands(message: types.Message):
 async def zodiac_commands(message: types.Message):
     try:
         zoc = message.text
-        await message.reply(get_connect_heroku_bd(zodiac=zoc, id=index))
+        await message.reply(get_connect_heroku_bd(zodiac=zoc.capitalize(), id=index))
 
     except Exception:
         await message.reply("Что блядь знаки зодиака не знаем?")
