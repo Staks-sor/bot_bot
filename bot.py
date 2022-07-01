@@ -151,7 +151,7 @@ async def sending_messages():
         index += 1
         await asyncio.sleep(30)
         # 86400 секунд в сутках
-
+        # gdfgdfgd
 
 if __name__ == '__main__':
     dp.loop.create_task(sending_messages())
