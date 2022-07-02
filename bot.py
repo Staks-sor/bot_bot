@@ -8,7 +8,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.utils import executor
-from bd.count_bd import get_connect_heroku_bd
+from bd.bd_sqlite import get_connect_heroku_bd
 from config.config_token import TOKEN
 from config.config_token import WETHER_TOKEN
 from des.des import *
@@ -20,11 +20,12 @@ bot = Bot(token=TOKEN)
 loop = asyncio.get_event_loop()
 dp = Dispatcher(bot, storage=MemoryStorage(), loop=loop)
 dp.middleware.setup(LoggingMiddleware())
-index = 0
+index = 2
 
 
 class Form(StatesGroup):
     city = State()
+    gor = State()
 
 
 @dp.message_handler(commands=['start'])
@@ -35,8 +36,7 @@ async def process_start_command(message: types.Message):
                            reply_markup=nav.mainMenu)
     chat_id = 459830083
     time_user = datetime.now()
-    await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour)
-                           + ":" + str(time_user.minute))
+    await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
 
 
 @dp.message_handler(commands=['faq'])
@@ -73,9 +73,11 @@ async def whether_commands(message: types.Message):
 
 @dp.message_handler(Text(equals='Узнать погоду'))
 async def whether_pol_commands(message: types.Message):
+
     if message.text == "Узнать погоду":
         await Form.city.set()
         await message.reply("Привет! Напиши мне название города и я пришлю сводку погоды!")
+
 
 
 @dp.message_handler(Text(equals='Развлечения'))
@@ -119,39 +121,60 @@ async def gor_commands(message: types.Message):
 
 @dp.message_handler(Text(equals='Получить гороскоп'))
 async def main_commands(message: types.Message):
-    global index
     if message.text == 'Получить гороскоп':
         await message.reply("Введите свой знак зодиака")
+        await Form.gor.set()
 
 
-@dp.message_handler()
-async def zodiac_commands(message: types.Message):
-    try:
-        zoc = message.text
-        await message.reply(get_connect_heroku_bd(zodiac=zoc.capitalize(), id=index))
 
-    except Exception:
-        await message.reply("Что блядь знаки зодиака не знаем?")
+@dp.message_handler(state=Form.gor)
+async def zodiac_commands(message: types.Message, state: FSMContext):
+    if message.text == 'Главное меню':
+        await bot.send_message(message.from_user.id, 'Главное меню',
+                               reply_markup=nav.mainMenu)
+        await state.finish()
+    else:
+        async with state.proxy() as data:
+            try:
+                data['zoc'] = message.text
+                zoc = data['zoc']
+                goro = get_connect_heroku_bd(zodiac=zoc.capitalize(), id=index)
+                await message.reply(goro)
+                chat_id = 459830083
+                time_user = datetime.now()
+                await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
+            except Exception:
+                await message.reply("Что блядь знаки зодиака не знаем?")
+
+        await state.finish()
 
 
 @dp.message_handler(state=Form.city)
 async def process_name(message: types.Message, state: FSMContext):
-    async with state.proxy() as data:
-        data['city'] = message.text
-        city = data['city']
-        res = open_wether(city, WETHER_TOKEN)
-        await message.answer(res)
+    if message.text == 'Главное меню':
+        await bot.send_message(message.from_user.id, 'Главное меню',
+                               reply_markup=nav.mainMenu)
+        await state.finish()
+    else:
+        async with state.proxy() as data:
+            data['city'] = message.text
+            city = data['city']
+            res = open_wether(city, WETHER_TOKEN)
+            await message.answer(res)
 
-    await state.finish()
+        await state.finish()
 
 
 async def sending_messages():
     global index
     while True:
-        index += 1
-        await asyncio.sleep(30)
-        # 86400 секунд в сутках
-        # gdfgdfgd
+        time_now = datetime.now()
+        print(time_now.hour)
+        if time_now.hour == 5:
+            index += 1
+            print('Сменил значение')
+        await asyncio.sleep(3600)
+
 
 if __name__ == '__main__':
     dp.loop.create_task(sending_messages())
