@@ -8,7 +8,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.utils import executor
-from bd.bd_sqlite import get_connect_heroku_bd
+from bd.count_bd import get_connect_heroku_bd
 from config.config_token import TOKEN
 from config.config_token import WETHER_TOKEN
 from des.des import *
@@ -178,4 +178,4 @@ async def sending_messages():
 
 if __name__ == '__main__':
     dp.loop.create_task(sending_messages())
-    executor.start_polling(dp, skip_updates=True, timeout=2)
+    executor.start_polling(dp, skip_updates=True)
