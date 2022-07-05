@@ -20,7 +20,7 @@ bot = Bot(token=TOKEN)
 loop = asyncio.get_event_loop()
 dp = Dispatcher(bot, storage=MemoryStorage(), loop=loop)
 dp.middleware.setup(LoggingMiddleware())
-f = open('../botmyffff/bd/index.txt', "r")
+f = open('bd/index.txt', "r")
 number_id = f.read(1)
 f.close()
 index = int(number_id)
@@ -61,65 +61,65 @@ async def regestration_commands(message: types.Message):
                                reply_markup=nav.mainMenu)
 
 
-@dp.message_handler(Text(equals='Полезное'))
+@dp.message_handler(Text(equals='🤔Полезное'))
 async def polza_commands(message: types.Message):
-    if message.text == 'Полезное':
+    if message.text == '🤔Полезное':
         await bot.send_message(message.from_user.id, 'Выбери погоду и введи город',
                                reply_markup=nav.wetherMenu)
 
 
-@dp.message_handler(Text(equals='Полезное'))
+@dp.message_handler(Text(equals='🌤Погода🌤'))
 async def whether_commands(message: types.Message):
-    if message.text == 'Погода':
+    if message.text == '🌤Погода🌤':
         await bot.send_message(message.from_user.id,
-                               'Погода',
+                               '🌤Погода🌤',
                                reply_markup=nav.wetherMenu)
 
 
-@dp.message_handler(Text(equals='Узнать погоду'))
+@dp.message_handler(Text(equals='🌤Узнать погоду🌤'))
 async def whether_pol_commands(message: types.Message):
-    if message.text == "Узнать погоду":
+    if message.text == "🌤Узнать погоду🌤":
         await Form.city.set()
         await message.reply("Привет! Напиши мне название города и я пришлю сводку погоды!")
 
 
-@dp.message_handler(Text(equals='Развлечения'))
+@dp.message_handler(Text(equals='😂Развлечения'))
 async def happy_commands(message: types.Message):
-    if message.text == 'Развлечения':
+    if message.text == '😂Развлечения':
         await bot.send_message(message.from_user.id, 'Генерация мата, бредовый гороскоп',
                                reply_markup=nav.otherMenu)
 
 
-@dp.message_handler(Text(equals='Мат'))
+@dp.message_handler(Text(equals='🤬Мат'))
 async def mat_commands(message: types.Message):
-    if message.text == 'Мат':
-        await bot.send_message(message.from_user.id, 'Мат',
+    if message.text == '🤬Мат':
+        await bot.send_message(message.from_user.id, '🤬Мат',
                                reply_markup=nav.matMenu)
 
 
-@dp.message_handler(Text(equals='Для парня'))
+@dp.message_handler(Text(equals='👨Для парня'))
 async def mat_man_commands(message: types.Message):
-    if message.text == 'Для парня':
+    if message.text == '👨Для парня':
         await message.answer(for_man())
 
 
-@dp.message_handler(Text(equals='Для девушки'))
+@dp.message_handler(Text(equals='👩Для девушки'))
 async def mat_woman_commands(message: types.Message):
-    if message.text == 'Для девушки':
+    if message.text == '👩Для девушки':
         await message.answer(for_women())
 
 
-@dp.message_handler(Text(equals='Главное меню'))
+@dp.message_handler(Text(equals='⬅ Главное меню'))
 async def main_commands(message: types.Message):
-    if message.text == 'Главное меню':
-        await bot.send_message(message.from_user.id, 'Главное меню',
+    if message.text == '⬅ Главное меню':
+        await bot.send_message(message.from_user.id, '⬅ Главное меню',
                                reply_markup=nav.mainMenu)
 
 
-@dp.message_handler(Text(equals='Гороскоп'))
+@dp.message_handler(Text(equals='♈Гороскоп♓'))
 async def gor_commands(message: types.Message):
-    if message.text == 'Гороскоп':
-        await bot.send_message(message.from_user.id, 'Гороскоп', reply_markup=nav.goroskop_menu)
+    if message.text == '♈Гороскоп♓':
+        await bot.send_message(message.from_user.id, '♈Гороскоп♓', reply_markup=nav.goroskop_menu)
 
 
 @dp.message_handler(Text(equals='Получить гороскоп'))
@@ -131,8 +131,8 @@ async def main_commands(message: types.Message):
 
 @dp.message_handler(state=Form.gor)
 async def zodiac_commands(message: types.Message, state: FSMContext):
-    if message.text == 'Главное меню':
-        await bot.send_message(message.from_user.id, 'Главное меню',
+    if message.text == '⬅ Главное меню':
+        await bot.send_message(message.from_user.id, '⬅ Главное меню',
                                reply_markup=nav.mainMenu)
         await state.finish()
     else:
@@ -155,8 +155,8 @@ async def zodiac_commands(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=Form.city)
 async def process_name(message: types.Message, state: FSMContext):
-    if message.text == 'Главное меню':
-        await bot.send_message(message.from_user.id, 'Главное меню',
+    if message.text == '⬅ Главное меню':
+        await bot.send_message(message.from_user.id, '⬅ Главное меню',
                                reply_markup=nav.mainMenu)
         await state.finish()
     else:
@@ -176,7 +176,7 @@ async def sending_messages():
         print(time_now.hour)
         if time_now.hour == 4:
             index += 1
-            f1 = open('../botmyffff/bd/index.txt', "w")
+            f1 = open('bd/index.txt', "w")
             f1.write(str(index))
             print('Сменил значение')
             f1.close()
