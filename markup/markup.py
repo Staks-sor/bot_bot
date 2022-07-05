@@ -1,3 +1,4 @@
+from aiogram import types
 from aiogram.types import ReplyKeyboardRemove, \
     ReplyKeyboardMarkup, KeyboardButton, \
     InlineKeyboardMarkup, InlineKeyboardButton
@@ -32,6 +33,20 @@ button_gor = KeyboardButton('Получить гороскоп')
 goroskop_menu = ReplyKeyboardMarkup(resize_keyboard=True).add(button_gor, button_back)
 
 # inline buttom
-
+keyboard = types.InlineKeyboardMarkup(row_width=3)
+keyboard1 = types.InlineKeyboardButton(text="♈Овен", callback_data="Овен")
+keyboard2 = types.InlineKeyboardButton(text="♉Телец", callback_data="Телец")
+keyboard3 = types.InlineKeyboardButton(text="♊Близнецы", callback_data="Близнецы")
+keyboard4 = types.InlineKeyboardButton(text="♋Рак", callback_data="Рак")
+keyboard5 = types.InlineKeyboardButton(text="♍Дева", callback_data="Дева")
+keyboard6 = types.InlineKeyboardButton(text="♎Весы", callback_data="Весы")
+keyboard7 = types.InlineKeyboardButton(text="♏Скорпион", callback_data="Скорпион")
+keyboard8 = types.InlineKeyboardButton(text="♐Стрелец", callback_data="Стрелец")
+keyboard9 = types.InlineKeyboardButton(text="♑Козерог", callback_data="Козерог")
+keyboard10 = types.InlineKeyboardButton(text="♒Водолей", callback_data="Водолей")
+keyboard11 = types.InlineKeyboardButton(text="♓Рыбы", callback_data="Рыбы")
+keyboard12 = types.InlineKeyboardButton(text="♌Лев", callback_data="Лев")
+keyboard.add(keyboard1, keyboard2, keyboard3, keyboard4, keyboard5, keyboard6, keyboard7,
+             keyboard8, keyboard9, keyboard10, keyboard11, keyboard12)
 
 
