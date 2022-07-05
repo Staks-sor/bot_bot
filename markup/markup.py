@@ -32,3 +32,6 @@ button_gor = KeyboardButton('Получить гороскоп')
 goroskop_menu = ReplyKeyboardMarkup(resize_keyboard=True).add(button_gor, button_back)
 
 # inline buttom
+
+
+

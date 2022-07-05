@@ -125,32 +125,61 @@ async def gor_commands(message: types.Message):
 @dp.message_handler(Text(equals='Получить гороскоп'))
 async def main_commands(message: types.Message):
     if message.text == 'Получить гороскоп':
-        await message.reply("Введите свой знак зодиака")
-        await Form.gor.set()
+        keyboard = types.InlineKeyboardMarkup(row_width=2)
+        keyboard.add(types.InlineKeyboardButton(text="Овен", callback_data="Овен"))
+        keyboard.add(types.InlineKeyboardButton(text="Козерог", callback_data="Козерог"))
+        keyboard.add(types.InlineKeyboardButton(text="Овен", callback_data="Овен"))
+        keyboard.add(types.InlineKeyboardButton(text="Овен", callback_data="Овен"))
+        keyboard.add(types.InlineKeyboardButton(text="Овен", callback_data="Овен"))
+        keyboard.add(types.InlineKeyboardButton(text="Овен", callback_data="Овен"))
+        keyboard.add(types.InlineKeyboardButton(text="Овен", callback_data="Овен"))
+        keyboard.add(types.InlineKeyboardButton(text="Овен", callback_data="Овен"))
+        keyboard.add(types.InlineKeyboardButton(text="Овен", callback_data="Овен"))
+        keyboard.add(types.InlineKeyboardButton(text="Овен", callback_data="Овен"))
+        keyboard.add(types.InlineKeyboardButton(text="Овен", callback_data="Овен"))
+        keyboard.add(types.InlineKeyboardButton(text="Овен", callback_data="Овен"))
+        await message.answer("Выбирите свой знак зодиака", reply_markup=keyboard)
+        # await message.reply("Введите свой знак зодиака")
+        # await Form.gor.set()
+
+@dp.callback_query_handler(Text(equals="Козерог"))
+async def send_random_value(call: types.CallbackQuery):
+    goro = get_connect_heroku_bd(zodiac="Козерог", id=index)
+    await call.message.answer(goro)
+
+@dp.callback_query_handler(Text(equals="Овен"))
+async def send_random_value(call: types.CallbackQuery):
+    goro = get_connect_heroku_bd(zodiac="Овен", id=index)
+    await call.message.answer(goro)
 
 
-@dp.message_handler(state=Form.gor)
-async def zodiac_commands(message: types.Message, state: FSMContext):
-    if message.text == '⬅ Главное меню':
-        await bot.send_message(message.from_user.id, '⬅ Главное меню',
-                               reply_markup=nav.mainMenu)
-        await state.finish()
-    else:
-        async with state.proxy() as data:
-            try:
-                data['zoc'] = message.text
-                zoc = data['zoc']
-                goro = get_connect_heroku_bd(zodiac=zoc.capitalize(), id=index)
 
-                await message.reply(goro)
-                chat_id = 459830083
-                time_user = datetime.now()
-                await bot.send_message(chat_id,
-                                       message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
-            except Exception:
-                await message.reply("Что блядь знаки зодиака не знаем?")
 
-        await state.finish()
+
+
+# @dp.message_handler(state=Form.gor)
+# async def zodiac_commands(message: types.Message, state: FSMContext):
+#     if message.text == '⬅ Главное меню':
+#         await bot.send_message(message.from_user.id, '⬅ Главное меню',
+#                                reply_markup=nav.mainMenu)
+#         await state.finish()
+#
+#     else:
+#         async with state.proxy() as data:
+#             try:
+#                 data['zoc'] = message.text
+#                 zoc = data['zoc']
+#                 goro = get_connect_heroku_bd(zodiac=zoc.capitalize(), id=index)
+#
+#                 await message.reply(goro)
+#                 chat_id = 459830083
+#                 time_user = datetime.now()
+#                 await bot.send_message(chat_id,
+#                                        message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
+#             except Exception:
+#                 await message.reply("Что блядь знаки зодиака не знаем?")
+#
+#         await state.finish()
 
 
 @dp.message_handler(state=Form.city)
@@ -182,6 +211,8 @@ async def sending_messages():
             f1.close()
             await asyncio.sleep(3600)
         await asyncio.sleep(1)
+
+
 
 if __name__ == '__main__':
     dp.loop.create_task(sending_messages())
