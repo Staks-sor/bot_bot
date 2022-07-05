@@ -20,7 +20,12 @@ bot = Bot(token=TOKEN)
 loop = asyncio.get_event_loop()
 dp = Dispatcher(bot, storage=MemoryStorage(), loop=loop)
 dp.middleware.setup(LoggingMiddleware())
-index = 2
+f = open('bd/index.txt', "r")
+number_id = f.read(1)
+f.close()
+index = int(number_id)
+print(index, "Это индекс")
+print("Фаил закрыт")
 
 
 class Form(StatesGroup):
@@ -73,11 +78,9 @@ async def whether_commands(message: types.Message):
 
 @dp.message_handler(Text(equals='Узнать погоду'))
 async def whether_pol_commands(message: types.Message):
-
     if message.text == "Узнать погоду":
         await Form.city.set()
         await message.reply("Привет! Напиши мне название города и я пришлю сводку погоды!")
-
 
 
 @dp.message_handler(Text(equals='Развлечения'))
@@ -126,7 +129,6 @@ async def main_commands(message: types.Message):
         await Form.gor.set()
 
 
-
 @dp.message_handler(state=Form.gor)
 async def zodiac_commands(message: types.Message, state: FSMContext):
     if message.text == 'Главное меню':
@@ -139,10 +141,12 @@ async def zodiac_commands(message: types.Message, state: FSMContext):
                 data['zoc'] = message.text
                 zoc = data['zoc']
                 goro = get_connect_heroku_bd(zodiac=zoc.capitalize(), id=index)
+
                 await message.reply(goro)
                 chat_id = 459830083
                 time_user = datetime.now()
-                await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
+                await bot.send_message(chat_id,
+                                       message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
             except Exception:
                 await message.reply("Что блядь знаки зодиака не знаем?")
 
@@ -170,11 +174,14 @@ async def sending_messages():
     while True:
         time_now = datetime.now()
         print(time_now.hour)
-        if time_now.hour == 5:
+        if time_now.hour == 30:
             index += 1
+            f1 = open('bd/index.txt', "w")
+            f1.write(str(index))
             print('Сменил значение')
-        await asyncio.sleep(3600)
-
+            f1.close()
+            await asyncio.sleep(3600)
+        await asyncio.sleep(1)
 
 if __name__ == '__main__':
     dp.loop.create_task(sending_messages())

@@ -1,4 +1,6 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import ReplyKeyboardRemove, \
+    ReplyKeyboardMarkup, KeyboardButton, \
+    InlineKeyboardMarkup, InlineKeyboardButton
 
 button_back = KeyboardButton('Главное меню')
 # main menu
@@ -28,3 +30,5 @@ wetherMenu = ReplyKeyboardMarkup(resize_keyboard=True).add(button_wet, button_ba
 # goroskop menu
 button_gor = KeyboardButton('Получить гороскоп')
 goroskop_menu = ReplyKeyboardMarkup(resize_keyboard=True).add(button_gor, button_back)
+
+# inline buttom
