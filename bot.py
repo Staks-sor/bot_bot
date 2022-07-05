@@ -20,7 +20,7 @@ bot = Bot(token=TOKEN)
 loop = asyncio.get_event_loop()
 dp = Dispatcher(bot, storage=MemoryStorage(), loop=loop)
 dp.middleware.setup(LoggingMiddleware())
-f = open('bd/index.txt', "r")
+f = open('../botmyffff/bd/index.txt', "r")
 number_id = f.read(1)
 f.close()
 index = int(number_id)
@@ -174,9 +174,9 @@ async def sending_messages():
     while True:
         time_now = datetime.now()
         print(time_now.hour)
-        if time_now.hour == 30:
+        if time_now.hour == 4:
             index += 1
-            f1 = open('bd/index.txt', "w")
+            f1 = open('../botmyffff/bd/index.txt', "w")
             f1.write(str(index))
             print('Сменил значение')
             f1.close()
