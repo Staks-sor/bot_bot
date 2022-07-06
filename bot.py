@@ -17,7 +17,8 @@ from markup import markup as nav
 from wether.wether import open_wether
 from capcha.capcha import capcha_bot
 
-
+cap = capcha_bot()
+print(cap)
 bot = Bot(token=TOKEN)
 loop = asyncio.get_event_loop()
 dp = Dispatcher(bot, storage=MemoryStorage(), loop=loop)
@@ -34,6 +35,7 @@ class Form(StatesGroup):
     city = State()
     gor = State()
     captcha = State()
+
 
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):
@@ -61,23 +63,20 @@ async def regestration_commands(message: types.Message):
     if message.text == 'Регистрация':
         await bot.send_message(message.from_user.id, "ведите капчу",
                                reply_markup=nav.mainMenu)
-        img = ()
-        await bot.send_photo(message.chat.id, img)
+
+        await bot.send_photo(message.chat.id, types.InputFile('/home/staks/PycharmProjects/bot_bot/out.png'))
     await Form.captcha.set()
-
-    # Ждем 30 сек. Потом проверяем менялся ли стейт. Если да то ничего не происходит.
-    # Если стейт тот же значит юзер не перешёл в хендлер ниже
-    await asyncio.sleep(30)
-
+    await asyncio.sleep(5)
 
 
 @dp.message_handler(state=Form.captcha)
 async def process_captcha_check(message: types.Message, state: FSMContext):
-    if message.text == str(capcha_bot()[1]):
+    if message.text == str(cap):
         await state.update_data(captcha_message=True)
         await message.answer("Ты умный, капчу разгадал")
-        await state.finish()
-
+    else:
+        await message.answer("не верно")
+    await state.finish()
 
 
 @dp.message_handler(Text(equals='🤔Полезное'))
@@ -274,7 +273,7 @@ async def sending_messages():
             print('Сменил значение')
             f1.close()
             await asyncio.sleep(3600)
-        await asyncio.sleep(1)
+        await asyncio.sleep(500)
 
 
 if __name__ == '__main__':
