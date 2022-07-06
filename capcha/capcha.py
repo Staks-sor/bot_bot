@@ -10,7 +10,7 @@ def capcha_bot():
     number_random = random.randint(100000, 999999)
     image.generate(str(number_random))
     image_generator = image.write(str(number_random), 'out.png')
-    return image_generator
+    return number_random
 
 
 
