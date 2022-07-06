@@ -17,8 +17,6 @@ from markup import markup as nav
 from wether.wether import open_wether
 from capcha.capcha import capcha_bot
 
-cap = capcha_bot()
-print(cap)
 bot = Bot(token=TOKEN)
 loop = asyncio.get_event_loop()
 dp = Dispatcher(bot, storage=MemoryStorage(), loop=loop)
@@ -60,6 +58,8 @@ async def process_start_command(message: types.Message):
 
 @dp.message_handler(Text(equals='Регистрация'))
 async def regestration_commands(message: types.Message):
+    cap = capcha_bot()
+    print(cap)
     if message.text == 'Регистрация':
         await bot.send_message(message.from_user.id, "ведите капчу",
                                reply_markup=nav.mainMenu)
@@ -67,10 +67,12 @@ async def regestration_commands(message: types.Message):
         await bot.send_photo(message.chat.id, types.InputFile('/home/staks/PycharmProjects/bot_bot/out.png'))
     await Form.captcha.set()
     await asyncio.sleep(5)
+    return cap
 
 
 @dp.message_handler(state=Form.captcha)
 async def process_captcha_check(message: types.Message, state: FSMContext):
+    global cap
     if message.text == str(cap):
         await state.update_data(captcha_message=True)
         await message.answer("Ты умный, капчу разгадал")
@@ -263,6 +265,7 @@ async def process_name(message: types.Message, state: FSMContext):
 
 async def sending_messages():
     global index
+
     while True:
         time_now = datetime.now()
         print(time_now.hour)
