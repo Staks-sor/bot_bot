@@ -15,7 +15,7 @@ from des.des import *
 from generator.generator import *
 from markup import markup as nav
 from wether.wether import open_wether
-
+from capcha.capcha import capcha_bot
 
 
 bot = Bot(token=TOKEN)
@@ -33,7 +33,7 @@ print("Фаил закрыт")
 class Form(StatesGroup):
     city = State()
     gor = State()
-
+    captcha = State()
 
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):
@@ -59,8 +59,25 @@ async def process_start_command(message: types.Message):
 @dp.message_handler(Text(equals='Регистрация'))
 async def regestration_commands(message: types.Message):
     if message.text == 'Регистрация':
-        await bot.send_message(message.from_user.id, 'В ближайщем обновлении',
+        await bot.send_message(message.from_user.id, "ведите капчу",
                                reply_markup=nav.mainMenu)
+        img = ()
+        await bot.send_photo(message.chat.id, img)
+    await Form.captcha.set()
+
+    # Ждем 30 сек. Потом проверяем менялся ли стейт. Если да то ничего не происходит.
+    # Если стейт тот же значит юзер не перешёл в хендлер ниже
+    await asyncio.sleep(30)
+
+
+
+@dp.message_handler(state=Form.captcha)
+async def process_captcha_check(message: types.Message, state: FSMContext):
+    if message.text == str(capcha_bot()[1]):
+        await state.update_data(captcha_message=True)
+        await message.answer("Ты умный, капчу разгадал")
+        await state.finish()
+
 
 
 @dp.message_handler(Text(equals='🤔Полезное'))
