@@ -16,6 +16,7 @@ from generator.generator import *
 from markup import markup as nav
 from wether.wether import open_wether
 
+
 bot = Bot(token=TOKEN)
 loop = asyncio.get_event_loop()
 dp = Dispatcher(bot, storage=MemoryStorage(), loop=loop)
