@@ -21,10 +21,12 @@ bot = Bot(token=TOKEN)
 loop = asyncio.get_event_loop()
 dp = Dispatcher(bot, storage=MemoryStorage(), loop=loop)
 dp.middleware.setup(LoggingMiddleware())
-f = open('bd/index.txt', "r")
-number_id = f.read(1)
-f.close()
-index = int(number_id)
+# f = open('bd/index.txt', "r")
+# number_id = f.read(1)
+# f.close()
+index = 1
+
+
 print(index, "Это индекс")
 print("Фаил закрыт")
 
