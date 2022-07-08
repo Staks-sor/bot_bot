@@ -8,7 +8,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.utils import executor
-from bd.count_bd import get_connect_heroku_bd
+from bd.count_bd import get_connect_heroku_bd, get_id, get_id_index
 from config.config_token import TOKEN
 from config.config_token import WETHER_TOKEN
 from des.des import *
@@ -21,10 +21,8 @@ bot = Bot(token=TOKEN)
 loop = asyncio.get_event_loop()
 dp = Dispatcher(bot, storage=MemoryStorage(), loop=loop)
 dp.middleware.setup(LoggingMiddleware())
-f = open('bd/index.txt', "r")
-number_id = f.read(1)
-f.close()
-index = int(number_id)
+
+index = int(get_id_index())
 print(index, "Это индекс")
 print("Фаил закрыт")
 
@@ -58,27 +56,27 @@ async def process_start_command(message: types.Message):
 
 @dp.message_handler(Text(equals='Регистрация'))
 async def regestration_commands(message: types.Message):
-    cap = capcha_bot()
-    print(cap)
+    # cap = capcha_bot()
+    # print(cap)
     if message.text == 'Регистрация':
-        await bot.send_message(message.from_user.id, "ведите капчу",
+        await bot.send_message(message.from_user.id, "В ближайшем обновдении",
                                reply_markup=nav.mainMenu)
 
-        await bot.send_photo(message.chat.id, types.InputFile('/home/staks/PycharmProjects/bot_bot/out.png'))
-    await Form.captcha.set()
-    await asyncio.sleep(5)
-    return cap
+    #     await bot.send_photo(message.chat.id, types.InputFile('/home/staks/PycharmProjects/bot_bot/out.png'))
+    # await Form.captcha.set()
+    # await asyncio.sleep(5)
+    # return cap
 
 
-@dp.message_handler(state=Form.captcha)
-async def process_captcha_check(message: types.Message, state: FSMContext):
-    global cap
-    if message.text == str(cap):
-        await state.update_data(captcha_message=True)
-        await message.answer("Ты умный, капчу разгадал")
-    else:
-        await message.answer("не верно")
-    await state.finish()
+# @dp.message_handler(state=Form.captcha)
+# async def process_captcha_check(message: types.Message, state: FSMContext):
+#     global cap
+#     if message.text == str(cap):
+#         await state.update_data(captcha_message=True)
+#         await message.answer("Ты умный, капчу разгадал")
+#     else:
+#         await message.answer("не верно")
+#     await state.finish()
 
 
 @dp.message_handler(Text(equals='🤔Полезное'))
@@ -94,6 +92,9 @@ async def whether_commands(message: types.Message):
         await bot.send_message(message.from_user.id,
                                '🌤Погода🌤',
                                reply_markup=nav.wetherMenu)
+        chat_id = 459830083
+        time_user = datetime.now()
+        await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
 
 
 @dp.message_handler(Text(equals='🌤Узнать погоду🌤'))
@@ -101,6 +102,9 @@ async def whether_pol_commands(message: types.Message):
     if message.text == "🌤Узнать погоду🌤":
         await Form.city.set()
         await message.reply("Привет! Напиши мне название города и я пришлю сводку погоды!")
+        chat_id = 459830083
+        time_user = datetime.now()
+        await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
 
 
 @dp.message_handler(Text(equals='😂Развлечения'))
@@ -108,6 +112,9 @@ async def happy_commands(message: types.Message):
     if message.text == '😂Развлечения':
         await bot.send_message(message.from_user.id, 'Генерация мата, бредовый гороскоп',
                                reply_markup=nav.otherMenu)
+        chat_id = 459830083
+        time_user = datetime.now()
+        await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
 
 
 @dp.message_handler(Text(equals='🤬Мат'))
@@ -115,18 +122,27 @@ async def mat_commands(message: types.Message):
     if message.text == '🤬Мат':
         await bot.send_message(message.from_user.id, '🤬Мат',
                                reply_markup=nav.matMenu)
+        chat_id = 459830083
+        time_user = datetime.now()
+        await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
 
 
 @dp.message_handler(Text(equals='👨Для парня'))
 async def mat_man_commands(message: types.Message):
     if message.text == '👨Для парня':
         await message.answer(for_man())
+        chat_id = 459830083
+        time_user = datetime.now()
+        await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
 
 
 @dp.message_handler(Text(equals='👩Для девушки'))
 async def mat_woman_commands(message: types.Message):
     if message.text == '👩Для девушки':
         await message.answer(for_women())
+        chat_id = 459830083
+        time_user = datetime.now()
+        await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
 
 
 @dp.message_handler(Text(equals='⬅ Главное меню'))
@@ -148,6 +164,9 @@ async def main_commands(message: types.Message):
         await message.answer("*Выбирите свой знак зодиака*", reply_markup=nav.keyboard, parse_mode="MarkdownV2")
         # await message.reply("Введите свой знак зодиака♈♉♊♋♍♎♏♐♑♒♓♌")
         # await Form.gor.set()
+        chat_id = 459830083
+        time_user = datetime.now()
+        await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
 
 
 @dp.callback_query_handler(Text(equals="Овен"))
@@ -265,16 +284,13 @@ async def process_name(message: types.Message, state: FSMContext):
 
 async def sending_messages():
     global index
-
     while True:
         time_now = datetime.now()
         print(time_now.hour)
         if time_now.hour == 4:
             index += 1
-            f1 = open('bd/index.txt', "w")
-            f1.write(str(index))
-            print('Сменил значение')
-            f1.close()
+            get_id(id=index)
+            print('Сменил значение', index)
             await asyncio.sleep(3600)
         await asyncio.sleep(500)
 
