@@ -1,6 +1,6 @@
 import psycopg2
 from psycopg2._psycopg import connection
-
+import asyncio
 from bd.config import host, user, password, db_name, port
 
 
@@ -34,6 +34,7 @@ def get_connect_heroku_bd(zodiac, id):
 
 
 def get_id(id=8):
+    global connection
     try:
         connection = psycopg2.connect(
             host=host,
@@ -60,9 +61,8 @@ def get_id(id=8):
             print("[INFO] PostgreSQL connection closed")
 
 
-
-
 def get_id_index():
+    global connection
     try:
         connection = psycopg2.connect(
             host=host,
@@ -90,7 +90,67 @@ def get_id_index():
             print("[INFO] PostgreSQL connection closed")
 
 
+def user_reg(user_name, user_id):
+    global connection
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name,
+            port=port
+        )
+        connection.autocommit = True
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f'INSERT INTO user_bot VALUES({user_id}, {user_name})'
+            )
+            text_cursor_bd = cursor.fetchone()
+            print(text_cursor_bd[0])
+            return text_cursor_bd[0]
+
+    except Exception as _ex:
+        print("[INFO] Error while working with PostgreSQL", _ex)
+    finally:
+        if connection:
+            # cursor.close()
+            connection.close()
+            print("[INFO] PostgreSQL connection closed")
+
+
+def user_examination(user_id):
+    global connection
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name,
+            port=port
+        )
+        connection.autocommit = True
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"""SELECT * FROM user_bot WHERE user_id = {user_id};"""
+            )
+            text_cursor_bd = cursor.fetchone()
+            print(text_cursor_bd[0])
+            return text_cursor_bd[0]
+
+    except Exception as _ex:
+        print("[INFO] Error while working with PostgreSQL", _ex)
+    finally:
+        if connection:
+            # cursor.close()
+            connection.close()
+            print("[INFO] PostgreSQL connection closed")
+
+
 if __name__ == "__main__":
     get_connect_heroku_bd(zodiac="Овен", id=1)
     get_id()
     get_id_index()
+    user_reg(user_name=user, user_id=user)
+    user_examination(user_id=user)
