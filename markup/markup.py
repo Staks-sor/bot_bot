@@ -50,3 +50,8 @@ keyboard.add(keyboard1, keyboard2, keyboard3, keyboard4, keyboard5, keyboard6, k
              keyboard8, keyboard9, keyboard10, keyboard11, keyboard12)
 
 
+#личный кабинет
+button_profail = KeyboardButton('Ваш профаил')
+button_tz = KeyboardButton('Создать ТЗ')
+button_resume = KeyboardButton('Создать резюме')
+menu_personal = ReplyKeyboardMarkup(resize_keyboard=True).add(button_profail, button_tz, button_resume, button_back)
