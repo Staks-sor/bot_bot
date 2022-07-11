@@ -40,8 +40,7 @@ async def process_start_command(message: types.Message):
                                message.from_user),
                            reply_markup=nav.mainMenu)
     chat_id = 459830083
-    time_user = datetime.now()
-    await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
+    await bot.send_message(chat_id, message.from_user.username)
 
 
 @dp.message_handler(commands=['faq'])
@@ -93,8 +92,7 @@ async def whether_commands(message: types.Message):
                                '🌤Погода🌤',
                                reply_markup=nav.wetherMenu)
         chat_id = 459830083
-        time_user = datetime.now()
-        await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
+        await bot.send_message(chat_id, message.from_user.username)
 
 
 @dp.message_handler(Text(equals='🌤Узнать погоду🌤'))
@@ -103,8 +101,7 @@ async def whether_pol_commands(message: types.Message):
         await Form.city.set()
         await message.reply("Привет! Напиши мне название города и я пришлю сводку погоды!")
         chat_id = 459830083
-        time_user = datetime.now()
-        await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
+        await bot.send_message(chat_id, message.from_user.username)
 
 
 @dp.message_handler(Text(equals='😂Развлечения'))
@@ -113,8 +110,7 @@ async def happy_commands(message: types.Message):
         await bot.send_message(message.from_user.id, 'Генерация мата, бредовый гороскоп',
                                reply_markup=nav.otherMenu)
         chat_id = 459830083
-        time_user = datetime.now()
-        await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
+        await bot.send_message(chat_id, message.from_user.username)
 
 
 @dp.message_handler(Text(equals='🤬Мат'))
@@ -123,8 +119,7 @@ async def mat_commands(message: types.Message):
         await bot.send_message(message.from_user.id, '🤬Мат',
                                reply_markup=nav.matMenu)
         chat_id = 459830083
-        time_user = datetime.now()
-        await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
+        await bot.send_message(chat_id, message.from_user.username)
 
 
 @dp.message_handler(Text(equals='👨Для парня'))
@@ -132,8 +127,7 @@ async def mat_man_commands(message: types.Message):
     if message.text == '👨Для парня':
         await message.answer(for_man())
         chat_id = 459830083
-        time_user = datetime.now()
-        await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
+        await bot.send_message(chat_id, message.from_user.username)
 
 
 @dp.message_handler(Text(equals='👩Для девушки'))
@@ -141,8 +135,7 @@ async def mat_woman_commands(message: types.Message):
     if message.text == '👩Для девушки':
         await message.answer(for_women())
         chat_id = 459830083
-        time_user = datetime.now()
-        await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
+        await bot.send_message(chat_id, message.from_user.username)
 
 
 @dp.message_handler(Text(equals='⬅ Главное меню'))
@@ -165,8 +158,7 @@ async def main_commands(message: types.Message):
         # await message.reply("Введите свой знак зодиака♈♉♊♋♍♎♏♐♑♒♓♌")
         # await Form.gor.set()
         chat_id = 459830083
-        time_user = datetime.now()
-        await bot.send_message(chat_id, message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
+        await bot.send_message(chat_id, message.from_user.username)
 
 
 @dp.callback_query_handler(Text(equals="Овен"))
@@ -290,7 +282,9 @@ async def sending_messages():
         if time_now.hour == 4:
             index += 1
             get_id(id=index)
-            print('Сменил значение', index)
+            print('Сменил значение', str(index))
+            chat_id = 459830083
+            await bot.send_message(chat_id, "Сменил значение на " + str(index))
             await asyncio.sleep(3600)
         await asyncio.sleep(500)
 
