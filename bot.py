@@ -8,7 +8,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.utils import executor
-from bd.count_bd import get_connect_heroku_bd, get_id, get_id_index
+from bd.count_bd import get_connect_heroku_bd, get_id, get_id_index, user_reg, user_examination
 from config.config_token import TOKEN
 from config.config_token import WETHER_TOKEN
 from des.des import *
@@ -55,27 +55,19 @@ async def process_start_command(message: types.Message):
 
 @dp.message_handler(Text(equals='Регистрация'))
 async def regestration_commands(message: types.Message):
-    # cap = capcha_bot()
-    # print(cap)
+
     if message.text == 'Регистрация':
-        await bot.send_message(message.from_user.id, "В ближайшем обновдении",
-                               reply_markup=nav.mainMenu)
+        if not user_examination(message.from_user.id):
 
-    #     await bot.send_photo(message.chat.id, types.InputFile('/home/staks/PycharmProjects/bot_bot/out.png'))
-    # await Form.captcha.set()
-    # await asyncio.sleep(5)
-    # return cap
+            user_reg(message.from_user.id, message.text != 'Регистрация')
+            await bot.send_message(message.from_user.id, "Укажите ваш ник: ")
+        else:
+            await bot.send_message(message.from_user.id, "Вы уже зарегестрированы", reply_markup=nav.menu_personal)
+        # await bot.send_message(message.from_user.id, "В ближайшем обновдении",
+        #                        reply_markup=nav.mainMenu)
 
 
-# @dp.message_handler(state=Form.captcha)
-# async def process_captcha_check(message: types.Message, state: FSMContext):
-#     global cap
-#     if message.text == str(cap):
-#         await state.update_data(captcha_message=True)
-#         await message.answer("Ты умный, капчу разгадал")
-#     else:
-#         await message.answer("не верно")
-#     await state.finish()
+
 
 
 @dp.message_handler(Text(equals='🤔Полезное'))
