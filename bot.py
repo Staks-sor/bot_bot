@@ -53,21 +53,14 @@ async def process_start_command(message: types.Message):
     await message.reply(author)
 
 
-@dp.message_handler(Text(equals='Регистрация'))
+@dp.message_handler(Text(equals='Войти'))
 async def regestration_commands(message: types.Message):
-
-    if message.text == 'Регистрация':
+    if message.text == 'Войти':
         if not user_examination(message.from_user.id):
-
-            user_reg(message.from_user.id, message.text != 'Регистрация')
-            await bot.send_message(message.from_user.id, "Укажите ваш ник: ")
+            user_reg(message.from_user.first_name, int(message.from_user.id))
+            await bot.send_message(message.from_user.id, "Вы вошли в личный кабинет", reply_markup=nav.menu_personal)
         else:
-            await bot.send_message(message.from_user.id, "Вы уже зарегестрированы", reply_markup=nav.menu_personal)
-        # await bot.send_message(message.from_user.id, "В ближайшем обновдении",
-        #                        reply_markup=nav.mainMenu)
-
-
-
+            await bot.send_message(message.from_user.id, "Вы вошли в личный кабинет", reply_markup=nav.menu_personal)
 
 
 @dp.message_handler(Text(equals='🤔Полезное'))
