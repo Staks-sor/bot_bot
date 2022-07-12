@@ -90,7 +90,7 @@ def get_id_index():
             print("[INFO] PostgreSQL connection closed")
 
 
-def user_reg(user_name, user_id):
+def user_reg(name_user, user_id):
     global connection
     try:
         connection = psycopg2.connect(
@@ -104,7 +104,8 @@ def user_reg(user_name, user_id):
 
         with connection.cursor() as cursor:
             cursor.execute(
-                f'INSERT INTO user_bot VALUES({user_id}, {user_name})'
+                f"""INSERT INTO user_bot (name_user, user_id)
+                 VALUES('{name_user}', {user_id});"""
             )
             text_cursor_bd = cursor.fetchone()
             print(text_cursor_bd[0])
