@@ -51,11 +51,17 @@ keyboard.add(keyboard1, keyboard2, keyboard3, keyboard4, keyboard5, keyboard6, k
 
 
 #личный кабинет
-button_profail = KeyboardButton('Ваши профиль')
+button_profail = KeyboardButton('Ваш профиль')
 button_tz = KeyboardButton('Создать ТЗ')
 button_resume = KeyboardButton('Создать резюме')
 button_see_tz = KeyboardButton('Найти ТЗ')
-button_see_resume = KeyboardButton('Поиск резюме')
+button_see_resume = KeyboardButton('Найти резюме')
 menu_personal = ReplyKeyboardMarkup(resize_keyboard=True).add(button_profail, button_tz, button_resume,
-                                                              button_tz, button_resume, button_back)
-
+                                                              button_see_tz, button_see_resume, button_back)
+# внутри профиля
+button_user = KeyboardButton('Личная информация')
+button_user_tz = KeyboardButton('Просмотр своих тз')
+button_user_resume = KeyboardButton('просмотр резюме')
+button_back_Back = KeyboardButton('⬅ Назад')
+menu_profail = ReplyKeyboardMarkup(resize_keyboard=True).add(button_user, button_user_tz, button_user_resume,
+                                                             button_back_Back)
