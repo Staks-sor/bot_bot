@@ -15,7 +15,6 @@ from des.des import *
 from generator.generator import *
 from markup import markup as nav
 from wether.wether import open_wether
-from capcha.capcha import capcha_bot
 
 bot = Bot(token=TOKEN)
 loop = asyncio.get_event_loop()
@@ -24,13 +23,12 @@ dp.middleware.setup(LoggingMiddleware())
 
 index = int(get_id_index())
 print(index, "Это индекс")
-print("Фаил закрыт")
 
 
 class Form(StatesGroup):
     city = State()
     gor = State()
-    captcha = State()
+
 
 
 @dp.message_handler(commands=['start'])
@@ -68,7 +66,6 @@ async def profail_user(message: types.Message):
     if message.text == 'Ваш профиль':
         await bot.send_message(message.from_user.id, "Вы в своем профиле",
                                reply_markup=nav.menu_profail)
-
 
 
 @dp.message_handler(Text(equals='Создать ТЗ'))
@@ -156,6 +153,7 @@ async def main_commands(message: types.Message):
     if message.text == '⬅ Главное меню':
         await bot.send_message(message.from_user.id, '⬅ Главное меню',
                                reply_markup=nav.mainMenu)
+
 
 @dp.message_handler(Text(equals='⬅ Назад'))
 async def main_commands(message: types.Message):
