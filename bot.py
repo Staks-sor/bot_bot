@@ -63,6 +63,34 @@ async def regestration_commands(message: types.Message):
             await bot.send_message(message.from_user.id, "Вы вошли в личный кабинет", reply_markup=nav.menu_personal)
 
 
+@dp.message_handler(Text(equals='Ваш профиль'))
+async def profail_user(message: types.Message):
+    if message.text == 'Ваш профиль':
+        await bot.send_message(message.from_user.id, "Вы в своем профиле",
+                               reply_markup=nav.menu_profail)
+
+
+
+@dp.message_handler(Text(equals='Создать ТЗ'))
+async def create_tz(message: types.Message):
+    pass
+
+
+@dp.message_handler(Text(equals='Создать резюме'))
+async def create_resume(message: types.Message):
+    pass
+
+
+@dp.message_handler(Text(equals='Найти ТЗ'))
+async def search_tz(message: types.Message):
+    pass
+
+
+@dp.message_handler(Text(equals='Найти резюме'))
+async def search_resume(message: types.Message):
+    pass
+
+
 @dp.message_handler(Text(equals='🤔Полезное'))
 async def polza_commands(message: types.Message):
     if message.text == '🤔Полезное':
@@ -128,6 +156,12 @@ async def main_commands(message: types.Message):
     if message.text == '⬅ Главное меню':
         await bot.send_message(message.from_user.id, '⬅ Главное меню',
                                reply_markup=nav.mainMenu)
+
+@dp.message_handler(Text(equals='⬅ Назад'))
+async def main_commands(message: types.Message):
+    if message.text == '⬅ Назад':
+        await bot.send_message(message.from_user.id, '⬅ Назад',
+                               reply_markup=nav.menu_personal)
 
 
 @dp.message_handler(Text(equals='♈Гороскоп♓'))
