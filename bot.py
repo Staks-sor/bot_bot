@@ -30,7 +30,6 @@ class Form(StatesGroup):
     gor = State()
 
 
-
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):
     await bot.send_message(message.from_user.id,
@@ -248,31 +247,6 @@ async def send_random_value(call: types.CallbackQuery):
 async def send_random_value(call: types.CallbackQuery):
     goro = get_connect_heroku_bd(zodiac="Рыбы", id=index)
     await call.message.answer(goro)
-
-
-# @dp.message_handler(state=Form.gor)
-# async def zodiac_commands(message: types.Message, state: FSMContext):
-#     if message.text == '⬅ Главное меню':
-#         await bot.send_message(message.from_user.id, '⬅ Главное меню',
-#                                reply_markup=nav.mainMenu)
-#         await state.finish()
-#
-#     else:
-#         async with state.proxy() as data:
-#             try:
-#                 data['zoc'] = message.text
-#                 zoc = data['zoc']
-#                 goro = get_connect_heroku_bd(zodiac=zoc.capitalize(), id=index)
-#
-#                 await message.reply(goro)
-#                 chat_id = 459830083
-#                 time_user = datetime.now()
-#                 await bot.send_message(chat_id,
-#                                        message.from_user.username + ": " + message.text[6:] + str(time_user.hour))
-#             except Exception:
-#                 await message.reply("Что блядь знаки зодиака не знаем?")
-#
-#         await state.finish()
 
 
 @dp.message_handler(state=Form.city)
