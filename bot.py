@@ -37,7 +37,7 @@ async def process_start_command(message: types.Message):
                                message.from_user),
                            reply_markup=nav.mainMenu)
     chat_id = 459830083
-    await bot.send_message(chat_id, message.from_user.username)
+    await bot.send_message(chat_id, message.from_user.username, "заходил какой то чел")
 
 
 @dp.message_handler(commands=['faq'])
@@ -69,22 +69,32 @@ async def profail_user(message: types.Message):
 
 @dp.message_handler(Text(equals='Создать ТЗ'))
 async def create_tz(message: types.Message):
-    pass
+    if message.text == 'Создать ТЗ':
+        await bot.send_message(message.from_user.id, "Напишите задачу которую необходимо выполнить",
+                               reply_markup=nav.menu_profail)
 
 
 @dp.message_handler(Text(equals='Создать резюме'))
 async def create_resume(message: types.Message):
-    pass
+    if message.text == 'Создать резюме':
+        await bot.send_message(message.from_user.id, "Пришлите фото",
+                               reply_markup=nav.menu_profail)
 
 
 @dp.message_handler(Text(equals='Найти ТЗ'))
 async def search_tz(message: types.Message):
-    pass
+    if message.text == 'Найти ТЗ':
+        await bot.send_message(message.from_user.id,
+                               "Введите ключевые слова поиска через запятую (python, java, django)",
+                               reply_markup=nav.menu_profail)
 
 
 @dp.message_handler(Text(equals='Найти резюме'))
 async def search_resume(message: types.Message):
-    pass
+    if message.text == 'Найти резюме':
+        await bot.send_message(message.from_user.id,
+                               "Введите ключевые слова поиска через запятую (python, java, django)",
+                               reply_markup=nav.menu_profail)
 
 
 @dp.message_handler(Text(equals='🤔Полезное'))
@@ -101,7 +111,7 @@ async def whether_commands(message: types.Message):
                                '🌤Погода🌤',
                                reply_markup=nav.wetherMenu)
         chat_id = 459830083
-        await bot.send_message(chat_id, message.from_user.username)
+        await bot.send_message(chat_id, message.from_user.username, "заходил какой то чел")
 
 
 @dp.message_handler(Text(equals='🌤Узнать погоду🌤'))
@@ -119,7 +129,7 @@ async def happy_commands(message: types.Message):
         await bot.send_message(message.from_user.id, 'Генерация мата, бредовый гороскоп',
                                reply_markup=nav.otherMenu)
         chat_id = 459830083
-        await bot.send_message(chat_id, message.from_user.username)
+        await bot.send_message(chat_id, message.from_user.username, "заходил какой то чел")
 
 
 @dp.message_handler(Text(equals='🤬Мат'))
@@ -128,7 +138,7 @@ async def mat_commands(message: types.Message):
         await bot.send_message(message.from_user.id, '🤬Мат',
                                reply_markup=nav.matMenu)
         chat_id = 459830083
-        await bot.send_message(chat_id, message.from_user.username)
+        await bot.send_message(chat_id, message.from_user.username, "заходил какой то чел")
 
 
 @dp.message_handler(Text(equals='👨Для парня'))
@@ -136,7 +146,7 @@ async def mat_man_commands(message: types.Message):
     if message.text == '👨Для парня':
         await message.answer(for_man())
         chat_id = 459830083
-        await bot.send_message(chat_id, message.from_user.username)
+        await bot.send_message(chat_id, message.from_user.username, "заходил какой то чел")
 
 
 @dp.message_handler(Text(equals='👩Для девушки'))
@@ -144,7 +154,7 @@ async def mat_woman_commands(message: types.Message):
     if message.text == '👩Для девушки':
         await message.answer(for_women())
         chat_id = 459830083
-        await bot.send_message(chat_id, message.from_user.username)
+        await bot.send_message(chat_id, message.from_user.username, "заходил какой то чел")
 
 
 @dp.message_handler(Text(equals='⬅ Главное меню'))
@@ -174,7 +184,7 @@ async def main_commands(message: types.Message):
         # await message.reply("Введите свой знак зодиака♈♉♊♋♍♎♏♐♑♒♓♌")
         # await Form.gor.set()
         chat_id = 459830083
-        await bot.send_message(chat_id, message.from_user.username)
+        await bot.send_message(chat_id, message.from_user.username, "заходил какой то чел")
 
 
 @dp.callback_query_handler(Text(equals="Овен"))
