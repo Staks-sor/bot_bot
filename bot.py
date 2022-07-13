@@ -81,6 +81,7 @@ async def create_resume(message: types.Message):
                                reply_markup=nav.menu_profail)
 
 
+
 @dp.message_handler(Text(equals='Найти ТЗ'))
 async def search_tz(message: types.Message):
     if message.text == 'Найти ТЗ':
