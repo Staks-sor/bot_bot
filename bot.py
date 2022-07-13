@@ -77,9 +77,8 @@ async def create_tz(message: types.Message):
 @dp.message_handler(Text(equals='Создать резюме'))
 async def create_resume(message: types.Message):
     if message.text == 'Создать резюме':
-        await bot.send_message(message.from_user.id, "Пришлите фото",
+        await bot.send_message(message.from_user.id, "Пришлите фото, добавте описание",
                                reply_markup=nav.menu_profail)
-
 
 
 @dp.message_handler(Text(equals='Найти ТЗ'))
