@@ -148,10 +148,40 @@ def user_examination(user_id):
             connection.close()
             print("[INFO] PostgreSQL connection closed")
 
+def tz_reg(oglavlenie, tusk, stek):
+    global connection
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name,
+            port=port
+        )
+        connection.autocommit = True
 
-if __name__ == "__main__":
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"""INSERT INTO tz_bot (ogl, tusk, stek)
+                 VALUES('{oglavlenie}', '{tusk}', '{stek}');"""
+            )
+            text_cursor_bd = cursor.fetchone()
+            print(text_cursor_bd[0])
+            return text_cursor_bd[0]
+
+    except Exception as _ex:
+        print("[INFO] Error while working with PostgreSQL", _ex)
+    finally:
+        if connection:
+            # cursor.close()
+            connection.close()
+            print("[INFO] PostgreSQL connection closed")
+
+def main():
     get_connect_heroku_bd(zodiac="Овен", id=1)
     get_id()
     get_id_index()
-    user_reg(user_name=user, user_id=user)
+    user_reg(user_name="", user_id="")
     user_examination(user_id=user)
+if __name__ == "__main__":
+    main()
