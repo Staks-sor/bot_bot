@@ -8,7 +8,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.utils import executor
-from bd.count_bd import get_connect_heroku_bd, get_id, get_id_index, user_reg, user_examination
+from bd.count_bd import get_connect_heroku_bd, get_id, get_id_index, user_reg, user_examination, tz_reg
 from config.config_token import TOKEN
 from config.config_token import WETHER_TOKEN
 from des.des import *
@@ -28,6 +28,7 @@ print(index, "Это индекс")
 class Form(StatesGroup):
     city = State()
     gor = State()
+    tz = State()
 
 
 @dp.message_handler(commands=['start'])
@@ -55,6 +56,7 @@ async def regestration_commands(message: types.Message):
     if message.text == 'Войти':
         if not user_examination(message.from_user.id):
             user_reg(message.from_user.first_name, int(message.from_user.id))
+            await bot.send_message(message.from_user.id, "Автоматическая регестрация пройдена успешно")
             await bot.send_message(message.from_user.id, "Вы вошли в личный кабинет", reply_markup=nav.menu_personal)
         else:
             await bot.send_message(message.from_user.id, "Вы вошли в личный кабинет", reply_markup=nav.menu_personal)
@@ -68,10 +70,34 @@ async def profail_user(message: types.Message):
 
 
 @dp.message_handler(Text(equals='Создать ТЗ'))
-async def create_tz(message: types.Message):
+@dp.message_handler(state=Form.tz)
+async def create_tz(message: types.Message, state: FSMContext):
     if message.text == 'Создать ТЗ':
         await bot.send_message(message.from_user.id, "Напишите задачу которую необходимо выполнить",
                                reply_markup=nav.menu_profail)
+        await Form.tz.set()
+        async with state.proxy() as data:
+            await message.reply("Введите оглавление")
+
+            data['city'] = message.text
+            city = data['city']
+        await Form.tz.set()
+        await state.finish()
+        await Form.tz.set()
+        async with state.proxy() as data:
+            await message.reply("Введите задачу")
+
+            data['city'] = message.text
+            city1 = data['city']
+        await state.finish()
+        async with state.proxy() as data:
+            await message.reply("Введите задачу")
+            await Form.tz.set()
+            data['city'] = message.text
+            city2 = data['city']
+
+        tz_reg(oglavlenie=city, tusk=city1, stek=city2)
+        await state.finish()
 
 
 @dp.message_handler(Text(equals='Создать резюме'))
