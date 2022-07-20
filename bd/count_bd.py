@@ -150,7 +150,7 @@ def user_examination(user_id):
             print("[INFO] PostgreSQL connection closed")
 
 
-def tz_reg(oglavlenie, stec):
+def tz_reg(oglavlenie, stec, opis):
     global connection
     try:
         connection = psycopg2.connect(
@@ -164,8 +164,8 @@ def tz_reg(oglavlenie, stec):
 
         with connection.cursor() as cursor:
             cursor.execute(
-                f"""INSERT INTO tz_bot (ogl, stek)
-                 VALUES('{oglavlenie}', '{stec}');"""
+                f"""INSERT INTO tz_bot (ogl, stek, opis)
+                 VALUES('{oglavlenie}', '{stec}', '{opis}');"""
             )
             text_cursor_bd = cursor.fetchone()
             print(text_cursor_bd[0])
