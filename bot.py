@@ -28,6 +28,7 @@ print(index, "Это индекс")
 class Form(StatesGroup):
     city = State()
     gor = State()
+    waiting_for_tz_title = State()
     waiting_for_tz = State()
     waiting_for_tz_steck = State()
 
@@ -72,8 +73,15 @@ async def profail_user(message: types.Message):
 
 @dp.message_handler(Text(equals='Создать ТЗ'))
 async def create_tz(message: types.Message):
-    await message.answer("Опишите кратко, что необходимо сделать", reply_markup=nav.menu_profail)
-    await Form.waiting_for_tz.set()
+    await message.answer("Название задачи", reply_markup=nav.menu_profail)
+    await Form.waiting_for_tz_title.set()
+
+
+@dp.message_handler(state=Form.waiting_for_tz_title)
+async def tz_name(message: types.Message, state: FSMContext):
+    await state.update_data(waiting_for_tz_title=message.text)
+    await message.answer("Описание задачи")
+    await Form.next()
 
 
 @dp.message_handler(state=Form.waiting_for_tz)
@@ -87,10 +95,10 @@ async def tz_name(message: types.Message, state: FSMContext):
 async def tzb_name(message: types.Message, state: FSMContext):
     await state.update_data(waiting_for_tz_steck=message.text)
     data = await state.get_data()
-    tz_reg(data['waiting_for_tz'], data['waiting_for_tz_steck'])
-    await message.answer(f"*{data['waiting_for_tz']}* \n {data['waiting_for_tz_steck']}", parse_mode="MarkdownV2")
+    tz_reg(data['waiting_for_tz'], data['waiting_for_tz_steck'], data['waiting_for_tz_title'])
+    await message.answer(f"*{data['waiting_for_tz_title']}* \n {data['waiting_for_tz']} \n "
+                         f"{data['waiting_for_tz_steck']}", parse_mode="MarkdownV2")
     await message.answer("Вы успешно создали ТЗ!")
-
     await state.finish()
 
 
@@ -131,7 +139,7 @@ async def whether_commands(message: types.Message):
                                '🌤Погода🌤',
                                reply_markup=nav.wetherMenu)
         chat_id = 459830083
-        await bot.send_message(chat_id, message.from_user.username, "заходил какой то чел")
+        await bot.send_message(chat_id, message.from_user.username)
 
 
 @dp.message_handler(Text(equals='🌤Узнать погоду🌤'))
