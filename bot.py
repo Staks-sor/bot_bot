@@ -28,7 +28,8 @@ print(index, "Это индекс")
 class Form(StatesGroup):
     city = State()
     gor = State()
-    tz = State()
+    waiting_for_tz = State()
+    waiting_for_tz_steck = State()
 
 
 @dp.message_handler(commands=['start'])
@@ -52,7 +53,7 @@ async def process_start_command(message: types.Message):
 
 
 @dp.message_handler(Text(equals='Войти'))
-async def regestration_commands(message: types.Message):
+async def registration_commands(message: types.Message):
     if message.text == 'Войти':
         if not user_examination(message.from_user.id):
             user_reg(message.from_user.first_name, int(message.from_user.id))
@@ -70,34 +71,27 @@ async def profail_user(message: types.Message):
 
 
 @dp.message_handler(Text(equals='Создать ТЗ'))
-@dp.message_handler(state=Form.tz)
-async def create_tz(message: types.Message, state: FSMContext):
-    if message.text == 'Создать ТЗ':
-        await bot.send_message(message.from_user.id, "Напишите задачу которую необходимо выполнить",
-                               reply_markup=nav.menu_profail)
-        await Form.tz.set()
-        async with state.proxy() as data:
-            await message.reply("Введите оглавление")
+async def create_tz(message: types.Message):
+    await message.answer("Опишите кратко, что необходимо сделать", reply_markup=nav.menu_profail)
+    await Form.waiting_for_tz.set()
 
-            data['city'] = message.text
-            city = data['city']
-        await Form.tz.set()
-        await state.finish()
-        await Form.tz.set()
-        async with state.proxy() as data:
-            await message.reply("Введите задачу")
 
-            data['city'] = message.text
-            city1 = data['city']
-        await state.finish()
-        async with state.proxy() as data:
-            await message.reply("Введите задачу")
-            await Form.tz.set()
-            data['city'] = message.text
-            city2 = data['city']
+@dp.message_handler(state=Form.waiting_for_tz)
+async def tz_name(message: types.Message, state: FSMContext):
+    await state.update_data(waiting_for_tz=message.text)
+    await message.answer("Опишите технологический стек")
+    await Form.next()
 
-        tz_reg(oglavlenie=city, tusk=city1, stek=city2)
-        await state.finish()
+
+@dp.message_handler(state=Form.waiting_for_tz_steck)
+async def tzb_name(message: types.Message, state: FSMContext):
+    await state.update_data(waiting_for_tz_steck=message.text)
+    data = await state.get_data()
+    tz_reg(data['waiting_for_tz'], data['waiting_for_tz_steck'])
+    await message.answer(f"*{data['waiting_for_tz']}* \n {data['waiting_for_tz_steck']}", parse_mode="MarkdownV2")
+    await message.answer("Вы успешно создали ТЗ!")
+
+    await state.finish()
 
 
 @dp.message_handler(Text(equals='Создать резюме'))
@@ -155,7 +149,7 @@ async def happy_commands(message: types.Message):
         await bot.send_message(message.from_user.id, 'Генерация мата, бредовый гороскоп',
                                reply_markup=nav.otherMenu)
         chat_id = 459830083
-        await bot.send_message(chat_id, message.from_user.username, "заходил какой то чел")
+        await bot.send_message(chat_id, message.from_user.username)
 
 
 @dp.message_handler(Text(equals='🤬Мат'))
@@ -164,7 +158,7 @@ async def mat_commands(message: types.Message):
         await bot.send_message(message.from_user.id, '🤬Мат',
                                reply_markup=nav.matMenu)
         chat_id = 459830083
-        await bot.send_message(chat_id, message.from_user.username, "заходил какой то чел")
+        await bot.send_message(chat_id, message.from_user.username)
 
 
 @dp.message_handler(Text(equals='👨Для парня'))
@@ -172,7 +166,7 @@ async def mat_man_commands(message: types.Message):
     if message.text == '👨Для парня':
         await message.answer(for_man())
         chat_id = 459830083
-        await bot.send_message(chat_id, message.from_user.username, "заходил какой то чел")
+        await bot.send_message(chat_id, message.from_user.username)
 
 
 @dp.message_handler(Text(equals='👩Для девушки'))
@@ -180,7 +174,7 @@ async def mat_woman_commands(message: types.Message):
     if message.text == '👩Для девушки':
         await message.answer(for_women())
         chat_id = 459830083
-        await bot.send_message(chat_id, message.from_user.username, "заходил какой то чел")
+        await bot.send_message(chat_id, message.from_user.username)
 
 
 @dp.message_handler(Text(equals='⬅ Главное меню'))
@@ -207,10 +201,9 @@ async def gor_commands(message: types.Message):
 async def main_commands(message: types.Message):
     if message.text == 'Получить гороскоп':
         await message.answer("*Выбирите свой знак зодиака*", reply_markup=nav.keyboard, parse_mode="MarkdownV2")
-        # await message.reply("Введите свой знак зодиака♈♉♊♋♍♎♏♐♑♒♓♌")
-        # await Form.gor.set()
+
         chat_id = 459830083
-        await bot.send_message(chat_id, message.from_user.username, "заходил какой то чел")
+        await bot.send_message(chat_id, message.from_user.username)
 
 
 @dp.callback_query_handler(Text(equals="Овен"))
