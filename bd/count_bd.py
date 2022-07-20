@@ -2,6 +2,7 @@ import psycopg2
 from psycopg2._psycopg import connection
 import asyncio
 from bd.config import host, user, password, db_name, port
+from datetime import datetime
 
 
 def get_connect_heroku_bd(zodiac, id):
@@ -148,7 +149,8 @@ def user_examination(user_id):
             connection.close()
             print("[INFO] PostgreSQL connection closed")
 
-def tz_reg(oglavlenie, tusk, stek):
+
+def tz_reg(oglavlenie, stec):
     global connection
     try:
         connection = psycopg2.connect(
@@ -162,8 +164,8 @@ def tz_reg(oglavlenie, tusk, stek):
 
         with connection.cursor() as cursor:
             cursor.execute(
-                f"""INSERT INTO tz_bot (ogl, tusk, stek)
-                 VALUES('{oglavlenie}', '{tusk}', '{stek}');"""
+                f"""INSERT INTO tz_bot (ogl, stek)
+                 VALUES('{oglavlenie}', '{stec}');"""
             )
             text_cursor_bd = cursor.fetchone()
             print(text_cursor_bd[0])
@@ -177,11 +179,16 @@ def tz_reg(oglavlenie, tusk, stek):
             connection.close()
             print("[INFO] PostgreSQL connection closed")
 
+
 def main():
+    name = ""
+    id_us = ''
     get_connect_heroku_bd(zodiac="Овен", id=1)
     get_id()
     get_id_index()
-    user_reg(user_name="", user_id="")
+    user_reg(name, id_us)
     user_examination(user_id=user)
+
+
 if __name__ == "__main__":
     main()
