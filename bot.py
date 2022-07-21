@@ -40,7 +40,7 @@ async def process_start_command(message: types.Message):
                                message.from_user),
                            reply_markup=nav.mainMenu)
     chat_id = 459830083
-    await bot.send_message(chat_id, message.from_user.username, "заходил какой то чел")
+    await bot.send_message(chat_id, message.from_user.username)
 
 
 @dp.message_handler(commands=['faq'])
@@ -87,12 +87,14 @@ async def tz_name(message: types.Message, state: FSMContext):
 @dp.message_handler(state=Form.waiting_for_tz)
 async def tz_name(message: types.Message, state: FSMContext):
     await state.update_data(waiting_for_tz=message.text)
-    await message.answer("Опишите технологический стек")
+    await message.answer("Опишите технологический стек \n"
+                         "Важно стек вводить через проблел."
+                         "\n Пример: python java django")
     await Form.next()
 
 
 @dp.message_handler(state=Form.waiting_for_tz_steck)
-async def tzb_name(message: types.Message, state: FSMContext):
+async def tz_create(message: types.Message, state: FSMContext):
     await state.update_data(waiting_for_tz_steck=message.text)
     data = await state.get_data()
     tz_reg(data['waiting_for_tz'], data['waiting_for_tz_steck'], data['waiting_for_tz_title'])
@@ -113,7 +115,7 @@ async def create_resume(message: types.Message):
 async def search_tz(message: types.Message):
     if message.text == 'Найти ТЗ':
         await bot.send_message(message.from_user.id,
-                               "Введите ключевые слова поиска через запятую (python, java, django)",
+                               "Введите ключевые слова поиска через пробел (python java django)",
                                reply_markup=nav.menu_profail)
 
 
