@@ -167,9 +167,7 @@ def tz_reg(oglavlenie, stec, opis):
                 f"""INSERT INTO tz_bot (ogl, stek, opis)
                  VALUES('{oglavlenie}', '{stec}', '{opis}');"""
             )
-            text_cursor_bd = cursor.fetchone()
-            print(text_cursor_bd[0])
-            return text_cursor_bd[0]
+            print("[INFO] запись выполнена PostgreSQL")
 
     except Exception as _ex:
         print("[INFO] Error while working with PostgreSQL", _ex)
@@ -179,6 +177,31 @@ def tz_reg(oglavlenie, stec, opis):
             connection.close()
             print("[INFO] PostgreSQL connection closed")
 
+def tz_search(search):
+    global connection
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name,
+            port=port
+        )
+        connection.autocommit = True
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"""SELECT * FROM tz_bot WHERE stek LIKE '%{search}%';"""
+            )
+            print("[INFO] поиск выполнен PostgreSQL")
+
+    except Exception as _ex:
+        print("[INFO] Error while working with PostgreSQL", _ex)
+    finally:
+        if connection:
+            # cursor.close()
+            connection.close()
+            print("[INFO] PostgreSQL connection closed")
 
 def main():
     name = ""
