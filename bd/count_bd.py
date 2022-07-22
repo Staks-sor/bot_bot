@@ -1,11 +1,11 @@
-import psycopg2
-from psycopg2._psycopg import connection
 import asyncio
+
+import psycopg2
+
 from bd.config import host, user, password, db_name, port
-from datetime import datetime
 
 
-def get_connect_heroku_bd(zodiac, id):
+async def get_connect_heroku_bd(zodiac, id):
     global connection
     try:
         connection = psycopg2.connect(
@@ -34,7 +34,7 @@ def get_connect_heroku_bd(zodiac, id):
             print("[INFO] PostgreSQL connection closed")
 
 
-def get_id(id=8):
+async def get_id(id=21):
     global connection
     try:
         connection = psycopg2.connect(
@@ -91,7 +91,7 @@ def get_id_index():
             print("[INFO] PostgreSQL connection closed")
 
 
-def user_reg(name_user, user_id):
+async def user_reg(name_user, user_id):
     global connection
     try:
         connection = psycopg2.connect(
@@ -121,7 +121,7 @@ def user_reg(name_user, user_id):
             print("[INFO] PostgreSQL connection closed")
 
 
-def user_examination(user_id):
+async def user_examination(user_id):
     global connection
     try:
         connection = psycopg2.connect(
@@ -150,7 +150,7 @@ def user_examination(user_id):
             print("[INFO] PostgreSQL connection closed")
 
 
-def tz_reg(oglavlenie, stec, opis):
+async def tz_reg(oglavlenie, stec, opis):
     global connection
     try:
         connection = psycopg2.connect(
@@ -177,7 +177,8 @@ def tz_reg(oglavlenie, stec, opis):
             connection.close()
             print("[INFO] PostgreSQL connection closed")
 
-def tz_search(search):
+
+async def tz_search(search):
     global connection
     try:
         connection = psycopg2.connect(
@@ -203,15 +204,14 @@ def tz_search(search):
             connection.close()
             print("[INFO] PostgreSQL connection closed")
 
-def main():
-    name = ""
-    id_us = ''
-    get_connect_heroku_bd(zodiac="Овен", id=1)
-    get_id()
-    get_id_index()
-    user_reg(name, id_us)
-    user_examination(user_id=user)
-
 
 if __name__ == "__main__":
-    main()
+    name = ''
+    id_us = ''
+    ioloop = asyncio.get_event_loop()
+    tasks = [ioloop.create_task(get_connect_heroku_bd(zodiac="Овен", id=1)), ioloop.create_task(get_id()),
+             ioloop.create_task(get_id_index()), ioloop.create_task(user_reg(name, id_us)),
+             ioloop.create_task(user_examination(user_id=user))]
+    wait_tasks = asyncio.wait(tasks)
+    ioloop.run_until_complete(wait_tasks)
+    ioloop.close()
