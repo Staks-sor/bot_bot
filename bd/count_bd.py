@@ -3,7 +3,7 @@ import asyncio
 import psycopg2
 
 from bd.config import host, user, password, db_name, port
-
+import re
 
 async def get_connect_heroku_bd(zodiac, id):
     global connection
@@ -192,9 +192,17 @@ async def tz_search(search):
 
         with connection.cursor() as cursor:
             cursor.execute(
-                f"""SELECT * FROM tz_bot WHERE stek LIKE '%{search}%';"""
+                f"""SELECT * FROM tz_bot WHERE tech_stack LIKE '%{search}%';"""
             )
             print("[INFO] поиск выполнен PostgreSQL")
+            text_cursor_bd = cursor.fetchone()
+            print(type(text_cursor_bd))
+            gg = "".join(map(str, text_cursor_bd[1]))
+            gg1 = "".join(map(str, text_cursor_bd[2]))
+            gg2 = "".join(map(str, text_cursor_bd[3]))
+            print(gg, '\n', gg1, '\n', gg2)
+            # print(gg.replace("' ", "").replace("[1-9]", "").replace(".", ""))
+            return f"{gg}, '\n', {gg1}, '\n', {gg2}".replace("'", "").replace(",", "")
 
     except Exception as _ex:
         print("[INFO] Error while working with PostgreSQL", _ex)
@@ -241,7 +249,7 @@ if __name__ == "__main__":
     ioloop = asyncio.get_event_loop()
     tasks = [ioloop.create_task(get_connect_heroku_bd(zodiac="Овен", id=1)), ioloop.create_task(get_id()),
              ioloop.create_task(get_id_index()), ioloop.create_task(user_reg(name, id_us)),
-             ioloop.create_task(user_examination(user_id=user))]
+             ioloop.create_task(user_examination(user_id=user)), ioloop.create_task(tz_search(search='steck'))]
     wait_tasks = asyncio.wait(tasks)
     ioloop.run_until_complete(wait_tasks)
     ioloop.close()
