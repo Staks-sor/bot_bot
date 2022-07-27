@@ -1,5 +1,5 @@
-import asyncio
 from datetime import datetime
+
 from aiogram import Bot, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.contrib.middlewares.logging import LoggingMiddleware
@@ -8,7 +8,8 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.utils import executor
-from bd.count_bd import get_connect_heroku_bd, get_id, get_id_index, user_reg, user_examination, tz_reg
+
+from bd.count_bd import *
 from config.config_token import TOKEN
 from config.config_token import WETHER_TOKEN
 from des.des import *
@@ -40,7 +41,7 @@ async def process_start_command(message: types.Message):
                                message.from_user),
                            reply_markup=nav.mainMenu)
     chat_id = 459830083
-    await bot.send_message(chat_id, message.from_user.username)
+    await bot.send_message(chat_id, "зашел", message.from_user.username)
 
 
 @dp.message_handler(commands=['faq'])
@@ -73,35 +74,106 @@ async def profail_user(message: types.Message):
 
 @dp.message_handler(Text(equals='Создать ТЗ'))
 async def create_tz(message: types.Message):
-    await message.answer("Название задачи", reply_markup=nav.menu_profail)
-    await Form.waiting_for_tz_title.set()
+    if await tz_examination(message.from_user.id) == (0,):
+        await message.answer("Название задачи")
+        await Form.waiting_for_tz_title.set()
+    else:
+        await bot.send_message(message.from_user.id, "Вы создали макисмальное количество ТЗ")
 
 
 @dp.message_handler(state=Form.waiting_for_tz_title)
-async def tz_name(message: types.Message, state: FSMContext):
-    await state.update_data(waiting_for_tz_title=message.text)
-    await message.answer("Описание задачи")
-    await Form.next()
+async def cmd_cancel(message: types.Message, state: FSMContext):
+    if message.text == '⬅ Главное меню':
+        await state.finish()
+        await bot.send_message(message.from_user.id, "Вы отменили создание ТЗ и перешли в основное меню",
+                               reply_markup=nav.mainMenu)
+
+    elif message.text == 'Создать ТЗ':
+        await state.finish()
+        await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
+                               )
+    elif message.text == 'Создать резюме':
+        await state.finish()
+        await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
+                               )
+    elif message.text == 'Найти резюме':
+        await state.finish()
+        await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
+                               )
+    elif message.text == 'Найти ТЗ':
+        await state.finish()
+        await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
+                               )
+
+    else:
+        await state.update_data(waiting_for_tz_title=message.text)
+        await message.answer("Описание задачи")
+        await Form.next()
 
 
 @dp.message_handler(state=Form.waiting_for_tz)
 async def tz_name(message: types.Message, state: FSMContext):
-    await state.update_data(waiting_for_tz=message.text)
-    await message.answer("Опишите технологический стек \n"
-                         "Важно стек вводить через проблел."
-                         "\n Пример: python java django")
-    await Form.next()
+    if message.text == '⬅ Главное меню':
+        await state.finish()
+        await bot.send_message(message.from_user.id, "Вы отменили создание ТЗ и перешли в основное меню",
+                               reply_markup=nav.mainMenu)
+
+    elif message.text == 'Создать ТЗ':
+        await state.finish()
+        await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
+                               )
+    elif message.text == 'Создать резюме':
+        await state.finish()
+        await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
+                               )
+    elif message.text == 'Найти резюме':
+        await state.finish()
+        await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
+                               )
+    elif message.text == 'Найти ТЗ':
+        await state.finish()
+        await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
+                               )
+    else:
+        await state.update_data(waiting_for_tz=message.text)
+        await message.answer("Опишите технологический стек \n"
+                             "Важно стек вводить через проблел."
+                             "\n Пример: python java django")
+        await Form.next()
 
 
 @dp.message_handler(state=Form.waiting_for_tz_steck)
 async def tz_create(message: types.Message, state: FSMContext):
-    await state.update_data(waiting_for_tz_steck=message.text)
-    data = await state.get_data()
-    await tz_reg(data['waiting_for_tz'], data['waiting_for_tz_steck'], data['waiting_for_tz_title'])
-    await message.answer(f"*{data['waiting_for_tz_title']}* \n {data['waiting_for_tz']} \n "
-                         f"{data['waiting_for_tz_steck']}", parse_mode="MarkdownV2")
-    await message.answer("Вы успешно создали ТЗ!")
-    await state.finish()
+    if message.text == '⬅ Главное меню':
+        await state.finish()
+        await bot.send_message(message.from_user.id, "Вы отменили создание ТЗ и перешли в основное меню",
+                               reply_markup=nav.mainMenu)
+
+    elif message.text == 'Создать ТЗ':
+        await state.finish()
+        await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
+                               )
+    elif message.text == 'Создать резюме':
+        await state.finish()
+        await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
+                               )
+    elif message.text == 'Найти резюме':
+        await state.finish()
+        await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
+                               )
+    elif message.text == 'Найти ТЗ':
+        await state.finish()
+        await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
+                               )
+    else:
+        await state.update_data(waiting_for_tz_steck=message.text)
+        data = await state.get_data()
+        await tz_reg(data['waiting_for_tz_title'], data['waiting_for_tz'], data['waiting_for_tz_steck'],
+                     int(message.from_user.id))
+        await message.answer(f"*{data['waiting_for_tz_title']}* \n {data['waiting_for_tz']} \n "
+                             f"{data['waiting_for_tz_steck']}", parse_mode="MarkdownV2")
+        await message.answer("Вы успешно создали ТЗ!")
+        await state.finish()
 
 
 @dp.message_handler(Text(equals='Создать резюме'))
@@ -141,7 +213,7 @@ async def whether_commands(message: types.Message):
                                '🌤Погода🌤',
                                reply_markup=nav.wetherMenu)
         chat_id = 459830083
-        await bot.send_message(chat_id, message.from_user.username)
+        await bot.send_message(chat_id, "зашел", message.from_user.username)
 
 
 @dp.message_handler(Text(equals='🌤Узнать погоду🌤'))
@@ -150,7 +222,7 @@ async def whether_pol_commands(message: types.Message):
         await Form.city.set()
         await message.reply("Привет! Напиши мне название города и я пришлю сводку погоды!")
         chat_id = 459830083
-        await bot.send_message(chat_id, message.from_user.username)
+        await bot.send_message(chat_id, "зашел", message.from_user.username)
 
 
 @dp.message_handler(Text(equals='😂Развлечения'))
@@ -159,7 +231,7 @@ async def happy_commands(message: types.Message):
         await bot.send_message(message.from_user.id, 'Генерация мата, бредовый гороскоп',
                                reply_markup=nav.otherMenu)
         chat_id = 459830083
-        await bot.send_message(chat_id, message.from_user.username)
+        await bot.send_message(chat_id, "зашел", message.from_user.username)
 
 
 @dp.message_handler(Text(equals='🤬Мат'))
@@ -168,7 +240,7 @@ async def mat_commands(message: types.Message):
         await bot.send_message(message.from_user.id, '🤬Мат',
                                reply_markup=nav.matMenu)
         chat_id = 459830083
-        await bot.send_message(chat_id, message.from_user.username)
+        await bot.send_message(chat_id, "зашел", message.from_user.username)
 
 
 @dp.message_handler(Text(equals='👨Для парня'))
@@ -176,7 +248,7 @@ async def mat_man_commands(message: types.Message):
     if message.text == '👨Для парня':
         await message.answer(for_man())
         chat_id = 459830083
-        await bot.send_message(chat_id, message.from_user.username)
+        await bot.send_message(chat_id, "зашел", message.from_user.username)
 
 
 @dp.message_handler(Text(equals='👩Для девушки'))
@@ -184,7 +256,7 @@ async def mat_woman_commands(message: types.Message):
     if message.text == '👩Для девушки':
         await message.answer(for_women())
         chat_id = 459830083
-        await bot.send_message(chat_id, message.from_user.username)
+        await bot.send_message(chat_id, "зашел", message.from_user.username)
 
 
 @dp.message_handler(Text(equals='⬅ Главное меню'))
@@ -213,7 +285,7 @@ async def main_commands(message: types.Message):
         await message.answer("*Выбирите свой знак зодиака*", reply_markup=nav.keyboard, parse_mode="MarkdownV2")
 
         chat_id = 459830083
-        await bot.send_message(chat_id, message.from_user.username)
+        await bot.send_message(chat_id, "зашел", message.from_user.username)
 
 
 @dp.callback_query_handler(Text(equals="Овен"))
