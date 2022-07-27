@@ -32,6 +32,7 @@ class Form(StatesGroup):
     waiting_for_tz_title = State()
     waiting_for_tz = State()
     waiting_for_tz_steck = State()
+    tz_search_tz = State()
 
 
 @dp.message_handler(commands=['start'])
@@ -178,25 +179,36 @@ async def tz_create(message: types.Message, state: FSMContext):
 
 @dp.message_handler(Text(equals='Создать резюме'))
 async def create_resume(message: types.Message):
-    if message.text == 'Создать резюме':
+    if await tz_examination(message.from_user.id) == (0,):
+        await message.answer("Название задачи")
+        await Form.waiting_for_tz_title.set()
+    else:
+        await bot.send_message(message.from_user.id, "Вы создали макисмальное количество ТЗ")
         await bot.send_message(message.from_user.id, "Пришлите фото, добавте описание",
                                reply_markup=nav.menu_profail)
 
 
 @dp.message_handler(Text(equals='Найти ТЗ'))
 async def search_tz(message: types.Message):
-    if message.text == 'Найти ТЗ':
-        await bot.send_message(message.from_user.id,
-                               "Введите ключевые слова поиска через пробел (python java django)",
-                               reply_markup=nav.menu_profail)
+    await bot.send_message(message.from_user.id,
+                           "Введите ключевые слова поиска (python, java, django)")
+    await Form.tz_search_tz.set()
+
+
+@dp.message_handler(state=Form.tz_search_tz)
+async def tz_create(message: types.Message, state: FSMContext):
+    if message.text == message.text:
+
+        await message.answer(await tz_search(message.text))
+        await state.finish()
 
 
 @dp.message_handler(Text(equals='Найти резюме'))
 async def search_resume(message: types.Message):
-    if message.text == 'Найти резюме':
-        await bot.send_message(message.from_user.id,
-                               "Введите ключевые слова поиска через запятую (python, java, django)",
-                               reply_markup=nav.menu_profail)
+    pass
+    # await bot.send_message(message.from_user.id,
+    #                        "Введите ключевые слова поиска (python, java, django)")
+    # await Form.tz_search_tz.set()
 
 
 @dp.message_handler(Text(equals='🤔Полезное'))
