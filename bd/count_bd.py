@@ -34,7 +34,7 @@ async def get_connect_heroku_bd(zodiac, id):
             print("[INFO] PostgreSQL connection closed")
 
 
-async def get_id(id=21):
+async def get_id(id=30):
     global connection
     try:
         connection = psycopg2.connect(
@@ -150,7 +150,7 @@ async def user_examination(user_id):
             print("[INFO] PostgreSQL connection closed")
 
 
-async def tz_reg(oglavlenie, stec, opis):
+async def tz_reg(title, description, tech_stack, id_user):
     global connection
     try:
         connection = psycopg2.connect(
@@ -164,8 +164,8 @@ async def tz_reg(oglavlenie, stec, opis):
 
         with connection.cursor() as cursor:
             cursor.execute(
-                f"""INSERT INTO tz_bot (ogl, stek, opis)
-                 VALUES('{oglavlenie}', '{stec}', '{opis}');"""
+                f"""INSERT INTO tz_bot (title, description, tech_stack, id_user)
+                 VALUES('{title}', '{description}', '{tech_stack}', {id_user});"""
             )
             print("[INFO] запись выполнена PostgreSQL")
 
@@ -195,6 +195,36 @@ async def tz_search(search):
                 f"""SELECT * FROM tz_bot WHERE stek LIKE '%{search}%';"""
             )
             print("[INFO] поиск выполнен PostgreSQL")
+
+    except Exception as _ex:
+        print("[INFO] Error while working with PostgreSQL", _ex)
+    finally:
+        if connection:
+            # cursor.close()
+            connection.close()
+            print("[INFO] PostgreSQL connection closed")
+
+
+async def tz_examination(id_user):
+    global connection
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name,
+            port=port
+        )
+        connection.autocommit = True
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"""SELECT COUNT(*) as count FROM tz_bot WHERE id_user={id_user};"""
+            )
+
+            text_cursor_bd = cursor.fetchone()
+            print(text_cursor_bd)
+            return text_cursor_bd
 
     except Exception as _ex:
         print("[INFO] Error while working with PostgreSQL", _ex)
