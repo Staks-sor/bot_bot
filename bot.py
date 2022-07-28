@@ -55,15 +55,14 @@ async def process_start_command(message: types.Message):
     await message.reply(author)
 
 
-@dp.message_handler(Text(equals='Войти'))
+@dp.message_handler(Text(equals='Профиль'))
 async def registration_commands(message: types.Message):
-    if message.text == 'Войти':
-        if not await user_examination(message.from_user.id):
-            await user_reg(message.from_user.first_name, int(message.from_user.id))
-            await bot.send_message(message.from_user.id, "Автоматическая регестрация пройдена успешно")
-            await bot.send_message(message.from_user.id, "Вы вошли в личный кабинет", reply_markup=nav.menu_personal)
-        else:
-            await bot.send_message(message.from_user.id, "Вы вошли в личный кабинет", reply_markup=nav.menu_personal)
+    if not await user_examination(message.from_user.id):
+        await user_reg(message.from_user.first_name, int(message.from_user.id))
+        await bot.send_message(message.from_user.id, "Автоматическая регестрация пройдена успешно")
+        await bot.send_message(message.from_user.id, "Вы вошли в личный кабинет", reply_markup=nav.menu_personal)
+    else:
+        await bot.send_message(message.from_user.id, "Вы вошли в личный кабинет", reply_markup=nav.menu_personal)
 
 
 @dp.message_handler(Text(equals='Ваш профиль'))
@@ -75,7 +74,7 @@ async def profail_user(message: types.Message):
 
 @dp.message_handler(Text(equals='Создать ТЗ'))
 async def create_tz(message: types.Message):
-    if await tz_examination(message.from_user.id) == (0,):
+    if await tz_examination(message.from_user.id) == (0,) or (1,):
         await message.answer("Название задачи")
         await Form.waiting_for_tz_title.set()
     else:
@@ -198,7 +197,6 @@ async def search_tz(message: types.Message):
 @dp.message_handler(state=Form.tz_search_tz)
 async def tz_create(message: types.Message, state: FSMContext):
     if message.text == message.text:
-
         await message.answer(await tz_search(message.text))
         await state.finish()
 
