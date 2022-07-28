@@ -192,7 +192,7 @@ async def tz_search(search):
 
         with connection.cursor() as cursor:
             cursor.execute(
-                f"""SELECT * FROM tz_bot WHERE tech_stack LIKE '%{search}%';"""
+                f"""SELECT * FROM tz_bot WHERE tech_stack ILIKE '%{search}%';"""
             )
             print("[INFO] поиск выполнен PostgreSQL")
             text_cursor_bd = cursor.fetchone()
@@ -201,7 +201,6 @@ async def tz_search(search):
             gg1 = "".join(map(str, text_cursor_bd[2]))
             gg2 = "".join(map(str, text_cursor_bd[3]))
             print(gg, '\n', gg1, '\n', gg2)
-            # print(gg.replace("' ", "").replace("[1-9]", "").replace(".", ""))
             return f"{gg}, '\n', {gg1}, '\n', {gg2}".replace("'", "").replace(",", "")
 
     except Exception as _ex:
