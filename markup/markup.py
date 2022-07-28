@@ -60,10 +60,15 @@ menu_personal = ReplyKeyboardMarkup(resize_keyboard=True).add(button_profail, bu
                                                               button_see_tz, button_see_resume, button_back)
 # внутри профиля
 button_user = KeyboardButton('Личная информация')
-button_user_tz = KeyboardButton('Просмотр своих тз')
-button_user_resume = KeyboardButton('просмотр резюме')
 button_back_Back = KeyboardButton('⬅ Назад')
-menu_profail = ReplyKeyboardMarkup(resize_keyboard=True).add(button_user, button_user_tz, button_user_resume,
+menu_profail = ReplyKeyboardMarkup(resize_keyboard=True).add(button_user,
                                                              button_back_Back)
 
-#
+#личного кабинет
+button_ping = KeyboardButton('Отклики')
+button_update = KeyboardButton('Изменить ТЗ')
+button_delete = KeyboardButton('Удалить ТЗ')
+button_user_tz = KeyboardButton('Просмотр своих тз')
+button_user_resume = KeyboardButton('просмотр резюме')
+menu_my_cabinet = ReplyKeyboardMarkup(resize_keyboard=True).add(button_ping, button_update, button_delete,
+                                                                button_user_tz,button_user_resume, button_back_Back)
