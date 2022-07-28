@@ -5,7 +5,7 @@ from aiogram.types import ReplyKeyboardRemove, \
 
 button_back = KeyboardButton('⬅ Главное меню')
 # main menu
-registraiton_buttom = KeyboardButton('Войти')
+registraiton_buttom = KeyboardButton('Профиль')
 poleznoe_buttom = KeyboardButton('🤔Полезное')
 razvlechenia_buttom = KeyboardButton('😂Развлечения')
 mainMenu = ReplyKeyboardMarkup(resize_keyboard=True).add(registraiton_buttom, poleznoe_buttom, razvlechenia_buttom)
@@ -51,12 +51,12 @@ keyboard.add(keyboard1, keyboard2, keyboard3, keyboard4, keyboard5, keyboard6, k
 
 
 #личный кабинет
-button_profail = KeyboardButton('Ваш профиль')
-button_tz = KeyboardButton('Создать ТЗ')
-button_resume = KeyboardButton('Создать резюме')
+
+button_tz = KeyboardButton('Обработка ТЗ')
+button_resume = KeyboardButton('Обработка Резюме')
 button_see_tz = KeyboardButton('Найти ТЗ')
 button_see_resume = KeyboardButton('Найти резюме')
-menu_personal = ReplyKeyboardMarkup(resize_keyboard=True).add(button_profail, button_tz, button_resume,
+menu_personal = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True).add(button_tz, button_resume,
                                                               button_see_tz, button_see_resume, button_back)
 # внутри профиля
 button_user = KeyboardButton('Личная информация')
