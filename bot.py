@@ -38,11 +38,11 @@ class Form(StatesGroup):
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):
     await bot.send_message(message.from_user.id,
-                           'Привет {0.first_name}! \n Я бот для развлечения(пока только для развлечения)'.format(
-                               message.from_user),
+                           f'Привет {message.from_user.first_name}'
+                           f'! \n Я бот для развлечения(пока только для развлечения)',
                            reply_markup=nav.mainMenu)
     chat_id = 459830083
-    await bot.send_message(chat_id, "зашел", message.from_user.username)
+    await bot.send_message(chat_id, f"зашел {message.from_user.username}")
 
 
 @dp.message_handler(commands=['faq'])
@@ -70,7 +70,7 @@ async def registration_commands(message: types.Message):
 async def profail_user(message: types.Message):
     if message.text == 'Ваш профиль':
         await bot.send_message(message.from_user.id, "Вы в своем профиле",
-                               reply_markup=nav.menu_profail)
+                               reply_markup=nav.menu_my_cabinet)
 
 
 @dp.message_handler(Text(equals='Создать ТЗ'))
@@ -225,7 +225,7 @@ async def whether_commands(message: types.Message):
                                '🌤Погода🌤',
                                reply_markup=nav.wetherMenu)
         chat_id = 459830083
-        await bot.send_message(chat_id, "зашел", message.from_user.username)
+        await bot.send_message(chat_id, f"зашел {message.from_user.username}")
 
 
 @dp.message_handler(Text(equals='🌤Узнать погоду🌤'))
@@ -243,7 +243,7 @@ async def happy_commands(message: types.Message):
         await bot.send_message(message.from_user.id, 'Генерация мата, бредовый гороскоп',
                                reply_markup=nav.otherMenu)
         chat_id = 459830083
-        await bot.send_message(chat_id, "зашел", message.from_user.username)
+        await bot.send_message(chat_id, f"зашел {message.from_user.username}")
 
 
 @dp.message_handler(Text(equals='🤬Мат'))
@@ -252,7 +252,7 @@ async def mat_commands(message: types.Message):
         await bot.send_message(message.from_user.id, '🤬Мат',
                                reply_markup=nav.matMenu)
         chat_id = 459830083
-        await bot.send_message(chat_id, "зашел", message.from_user.username)
+        await bot.send_message(chat_id, f"зашел {message.from_user.username}")
 
 
 @dp.message_handler(Text(equals='👨Для парня'))
@@ -260,7 +260,7 @@ async def mat_man_commands(message: types.Message):
     if message.text == '👨Для парня':
         await message.answer(for_man())
         chat_id = 459830083
-        await bot.send_message(chat_id, "зашел", message.from_user.username)
+        await bot.send_message(chat_id, f"зашел {message.from_user.username}")
 
 
 @dp.message_handler(Text(equals='👩Для девушки'))
@@ -268,7 +268,7 @@ async def mat_woman_commands(message: types.Message):
     if message.text == '👩Для девушки':
         await message.answer(for_women())
         chat_id = 459830083
-        await bot.send_message(chat_id, "зашел", message.from_user.username)
+        await bot.send_message(chat_id, f"зашел {message.from_user.username}")
 
 
 @dp.message_handler(Text(equals='⬅ Главное меню'))
@@ -297,7 +297,7 @@ async def main_commands(message: types.Message):
         await message.answer("*Выбирите свой знак зодиака*", reply_markup=nav.keyboard, parse_mode="MarkdownV2")
 
         chat_id = 459830083
-        await bot.send_message(chat_id, "зашел", message.from_user.username)
+        await bot.send_message(chat_id, f"зашел {message.from_user.username}")
 
 
 @dp.callback_query_handler(Text(equals="Овен"))
