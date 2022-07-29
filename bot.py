@@ -215,8 +215,15 @@ async def search_tz(message: types.Message):
 @dp.message_handler(state=Form.tz_search_tz)
 async def tz_create(message: types.Message, state: FSMContext):
     if message.text == message.text:
-        await message.answer(await tz_search(message.text))
+        await message.answer(await tz_search(message.text), reply_markup=nav.keyboard_otklic)
         await state.finish()
+
+
+@dp.callback_query_handler(Text(equals="отклик"))
+async def search_otklic(call: types.CallbackQuery):
+    await call.answer(text="Вы откликнулись", show_alert=True)
+    # await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
+
 
 
 @dp.message_handler(Text(equals='Найти резюме'))
