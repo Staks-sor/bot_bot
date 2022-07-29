@@ -94,9 +94,16 @@ menu_resume = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True).add(
     button_back_Back
 )
 # удаление технического задания
-keyboard_delete = types.InlineKeyboardMarkup(de=True, row_width=2)
+keyboard_delete = types.InlineKeyboardMarkup(row_width=2)
 keyboard_delete_yes = types.InlineKeyboardButton(text="Да", callback_data="Да")
 keyboard_delete_no = types.InlineKeyboardButton(text="Нет", callback_data="Нет")
 keyboard_delete.add(
     keyboard_delete_yes, keyboard_delete_no
-            )
+)
+
+# кнопка отклика
+keyboard_otklic = types.InlineKeyboardMarkup(row_width=2)
+keyboard_otklic_i = types.InlineKeyboardButton(text="Откликнуться", callback_data="отклик")
+keyboard_otklic.add(
+    keyboard_otklic_i
+)
