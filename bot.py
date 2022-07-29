@@ -65,11 +65,12 @@ async def registration_commands(message: types.Message):
         await bot.send_message(message.from_user.id, "Вы вошли в личный кабинет", reply_markup=nav.menu_personal)
 
 
-@dp.message_handler(Text(equals='Ваш профиль'))
-async def profail_user(message: types.Message):
-    if message.text == 'Ваш профиль':
-        await bot.send_message(message.from_user.id, "Вы в своем профиле",
-                               reply_markup=nav.menu_my_cabinet)
+@dp.message_handler(Text(equals='Обработка ТЗ'))
+async def treatment_tz(message: types.Message):
+    await bot.send_message(message.from_user.id, "Здесь вы можете создать изменить"
+                                                 " и удалить свои технические задания",
+
+                           reply_markup=nav.menu_tz)
 
 
 @dp.message_handler(Text(equals='Создать ТЗ'))
@@ -82,7 +83,7 @@ async def create_tz(message: types.Message):
 
 
 @dp.message_handler(state=Form.waiting_for_tz_title)
-async def cmd_cancel(message: types.Message, state: FSMContext):
+async def tz_cancel(message: types.Message, state: FSMContext):
     if message.text == '⬅ Главное меню':
         await state.finish()
         await bot.send_message(message.from_user.id, "Вы отменили создание ТЗ и перешли в основное меню",
@@ -176,6 +177,14 @@ async def tz_create(message: types.Message, state: FSMContext):
         await state.finish()
 
 
+@dp.message_handler(Text(equals='Обработка Резюме'))
+async def treatment_resume(message: types.Message):
+    await bot.send_message(message.from_user.id, "Здесь вы можете создать изменить"
+                                                 " и удалить свои резюме",
+
+                           )
+
+
 @dp.message_handler(Text(equals='Создать резюме'))
 async def create_resume(message: types.Message):
     if await tz_examination(message.from_user.id) == (0,):
@@ -184,7 +193,7 @@ async def create_resume(message: types.Message):
     else:
         await bot.send_message(message.from_user.id, "Вы создали макисмальное количество ТЗ")
         await bot.send_message(message.from_user.id, "Пришлите фото, добавте описание",
-                               reply_markup=nav.menu_profail)
+                               reply_markup=nav.menu_resume)
 
 
 @dp.message_handler(Text(equals='Найти ТЗ'))
