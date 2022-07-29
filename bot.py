@@ -75,7 +75,7 @@ async def treatment_tz(message: types.Message):
 
 @dp.message_handler(Text(equals='Создать ТЗ'))
 async def create_tz(message: types.Message):
-    if await tz_examination(message.from_user.id) == (0,) or (1,):
+    if await tz_examination(message.from_user.id) == (0,):
         await message.answer("Название задачи")
         await Form.waiting_for_tz_title.set()
     else:
@@ -84,24 +84,20 @@ async def create_tz(message: types.Message):
 
 @dp.message_handler(state=Form.waiting_for_tz_title)
 async def tz_cancel(message: types.Message, state: FSMContext):
-    if message.text == '⬅ Главное меню':
+    if message.text == '⬅ Назад':
         await state.finish()
         await bot.send_message(message.from_user.id, "Вы отменили создание ТЗ и перешли в основное меню",
-                               reply_markup=nav.mainMenu)
+                               reply_markup=nav.menu_personal)
 
-    elif message.text == 'Создать ТЗ':
+    elif message.text == 'Изменить ТЗ':
         await state.finish()
         await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
                                )
-    elif message.text == 'Создать резюме':
+    elif message.text == 'Удалить ТЗ':
         await state.finish()
         await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
                                )
-    elif message.text == 'Найти резюме':
-        await state.finish()
-        await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
-                               )
-    elif message.text == 'Найти ТЗ':
+    elif message.text == 'Просмотр своих тз':
         await state.finish()
         await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
                                )
@@ -114,24 +110,20 @@ async def tz_cancel(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=Form.waiting_for_tz)
 async def tz_name(message: types.Message, state: FSMContext):
-    if message.text == '⬅ Главное меню':
+    if message.text == '⬅ Назад':
         await state.finish()
         await bot.send_message(message.from_user.id, "Вы отменили создание ТЗ и перешли в основное меню",
-                               reply_markup=nav.mainMenu)
+                               reply_markup=nav.menu_personal)
 
-    elif message.text == 'Создать ТЗ':
+    elif message.text == 'Изменить ТЗ':
         await state.finish()
         await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
                                )
-    elif message.text == 'Создать резюме':
+    elif message.text == 'Удалить ТЗ':
         await state.finish()
         await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
                                )
-    elif message.text == 'Найти резюме':
-        await state.finish()
-        await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
-                               )
-    elif message.text == 'Найти ТЗ':
+    elif message.text == 'Просмотр своих тз':
         await state.finish()
         await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
                                )
@@ -145,24 +137,20 @@ async def tz_name(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=Form.waiting_for_tz_steck)
 async def tz_create(message: types.Message, state: FSMContext):
-    if message.text == '⬅ Главное меню':
+    if message.text == '⬅ Назад':
         await state.finish()
         await bot.send_message(message.from_user.id, "Вы отменили создание ТЗ и перешли в основное меню",
-                               reply_markup=nav.mainMenu)
+                               reply_markup=nav.menu_personal)
 
-    elif message.text == 'Создать ТЗ':
+    elif message.text == 'Изменить ТЗ':
         await state.finish()
         await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
                                )
-    elif message.text == 'Создать резюме':
+    elif message.text == 'Удалить ТЗ':
         await state.finish()
         await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
                                )
-    elif message.text == 'Найти резюме':
-        await state.finish()
-        await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
-                               )
-    elif message.text == 'Найти ТЗ':
+    elif message.text == 'Просмотр своих тз':
         await state.finish()
         await bot.send_message(message.from_user.id, 'Вы отменили создание ТЗ',
                                )
@@ -175,6 +163,27 @@ async def tz_create(message: types.Message, state: FSMContext):
                              f"{data['waiting_for_tz_steck']}", parse_mode="MarkdownV2")
         await message.answer("Вы успешно создали ТЗ!")
         await state.finish()
+
+
+@dp.message_handler(Text(equals='Удалить ТЗ'))
+async def tz_delete(message: types.Message):
+    await message.answer("Точно хотите удалить техническое задание?",
+                         reply_markup=nav.keyboard_delete, parse_mode="MarkdownV2")
+
+
+@dp.callback_query_handler(Text(equals="Да"))
+async def delete_tz(call: types.CallbackQuery):
+    await call.answer(text="Успешно удалено", show_alert=True)
+    await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
+    await call.answer(await get_delete_tz(call.from_user.id))
+    await call.message.answer("Успешно удалено")
+
+
+@dp.callback_query_handler(text="Нет")
+async def delete_tz_no(call: types.CallbackQuery):
+    await call.answer(text="Удаление отменено", show_alert=True)
+    await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
+    await call.message.answer("Удаление отменено")
 
 
 @dp.message_handler(Text(equals='Обработка Резюме'))
@@ -412,4 +421,4 @@ async def sending_messages():
 
 if __name__ == '__main__':
     dp.loop.create_task(sending_messages(), )
-    executor.start_polling(dp, skip_updates=True)
+    executor.start_polling(dp, skip_updates=True, timeout=2)
