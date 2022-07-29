@@ -5,6 +5,7 @@ import psycopg2
 from bd.config import host, user, password, db_name, port
 import re
 
+
 async def get_connect_heroku_bd(zodiac, id):
     global connection
     try:
@@ -196,13 +197,13 @@ async def tz_search(search):
             )
             print("[INFO] поиск выполнен PostgreSQL")
             text_cursor_bd = cursor.fetchone()
-            print(type(text_cursor_bd))
-            gg = "".join(map(str, text_cursor_bd[1]))
-            gg1 = "".join(map(str, text_cursor_bd[2]))
-            gg2 = "".join(map(str, text_cursor_bd[3]))
-            print(gg, '\n', gg1, '\n', gg2)
-            return f"{gg}, '\n', {gg1}, '\n', {gg2}".replace("'", "").replace(",", "")
+            print(text_cursor_bd[1], text_cursor_bd[2], text_cursor_bd[3])
+            # gg = "".join(map(str, text_cursor_bd[1]))
+            # gg1 = "".join(map(str, text_cursor_bd[2]))
+            # gg2 = "".join(map(str, text_cursor_bd[3]))
 
+            return f"{text_cursor_bd[1]}, '\n', {text_cursor_bd[2]}, '\n', {text_cursor_bd[3]}"
+    # Обрати внимание на доработку метода вывода^
     except Exception as _ex:
         print("[INFO] Error while working with PostgreSQL", _ex)
     finally:
@@ -242,13 +243,43 @@ async def tz_examination(id_user):
             print("[INFO] PostgreSQL connection closed")
 
 
+async def get_delete_tz(user_id):
+    global connection
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name,
+            port=port
+        )
+        connection.autocommit = True
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"""DELETE FROM tz_bot
+                    WHERE id_user={user_id};"""
+            )
+
+            print("[INFO] Data was succefully inserted")
+
+    except Exception as _ex:
+        print("[INFO] Error while working with PostgreSQL", _ex)
+    finally:
+        if connection:
+            # cursor.close()
+            connection.close()
+            print("[INFO] PostgreSQL connection closed")
+
+
 if __name__ == "__main__":
     name = ''
     id_us = ''
     ioloop = asyncio.get_event_loop()
     tasks = [ioloop.create_task(get_connect_heroku_bd(zodiac="Овен", id=1)), ioloop.create_task(get_id()),
              ioloop.create_task(get_id_index()), ioloop.create_task(user_reg(name, id_us)),
-             ioloop.create_task(user_examination(user_id=user)), ioloop.create_task(tz_search(search='steck'))]
+             ioloop.create_task(user_examination(user_id=user)), ioloop.create_task(tz_search(search='steck')),
+             ioloop.create_task(get_delete_tz(user_id=user))]
     wait_tasks = asyncio.wait(tasks)
     ioloop.run_until_complete(wait_tasks)
     ioloop.close()
