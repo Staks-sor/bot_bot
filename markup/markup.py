@@ -4,6 +4,7 @@ from aiogram.types import ReplyKeyboardRemove, \
     InlineKeyboardMarkup, InlineKeyboardButton
 
 button_back = KeyboardButton('⬅ Главное меню')
+button_back_Back = KeyboardButton('⬅ Назад')
 # main menu
 registraiton_buttom = KeyboardButton('Профиль')
 poleznoe_buttom = KeyboardButton('🤔Полезное')
@@ -15,12 +16,11 @@ button_goroskop = KeyboardButton('♈Гороскоп♓')
 button_mat = KeyboardButton('🤬Мат')
 otherMenu = ReplyKeyboardMarkup(resize_keyboard=True).add(button_goroskop, button_mat, button_back)
 
-
 button_mat_man = KeyboardButton('👨Для парня')
 button_mat_woman = KeyboardButton('👩Для девушки')
 
 matMenu = ReplyKeyboardMarkup(resize_keyboard=True).add(button_mat_man, button_mat_woman, button_back)
-#Полезное меню
+# Полезное меню
 button_wether = KeyboardButton('🌤Погода🌤')
 poleznoeMenu = ReplyKeyboardMarkup(resize_keyboard=True).add(button_wether, button_back)
 
@@ -34,7 +34,7 @@ goroskop_menu = ReplyKeyboardMarkup(resize_keyboard=True).add(button_gor, button
 
 # inline buttom
 keyboard = types.InlineKeyboardMarkup(row_width=3)
-keyboard1 = types.InlineKeyboardButton(text="♈Овен", callback_data="Овен")
+keyboard1 = types.InlineKeyboardButton(remove_keyboard=True, text="♈Овен", callback_data="Овен")
 keyboard2 = types.InlineKeyboardButton(text="♉Телец", callback_data="Телец")
 keyboard3 = types.InlineKeyboardButton(text="♊Близнецы", callback_data="Близнецы")
 keyboard4 = types.InlineKeyboardButton(text="♋Рак", callback_data="Рак")
@@ -46,29 +46,50 @@ keyboard9 = types.InlineKeyboardButton(text="♑Козерог", callback_data="
 keyboard10 = types.InlineKeyboardButton(text="♒Водолей", callback_data="Водолей")
 keyboard11 = types.InlineKeyboardButton(text="♓Рыбы", callback_data="Рыбы")
 keyboard12 = types.InlineKeyboardButton(text="♌Лев", callback_data="Лев")
-keyboard.add(keyboard1, keyboard2, keyboard3, keyboard4, keyboard5, keyboard6, keyboard7,
-             keyboard8, keyboard9, keyboard10, keyboard11, keyboard12)
+keyboard.add(
+    keyboard1, keyboard2,
+    keyboard3, keyboard4,
+    keyboard5, keyboard6,
+    keyboard7, keyboard8,
+    keyboard9, keyboard10,
+    keyboard11, keyboard12
+)
 
-
-#личный кабинет
-
+# профиль
 button_tz = KeyboardButton('Обработка ТЗ')
 button_resume = KeyboardButton('Обработка Резюме')
 button_see_tz = KeyboardButton('Найти ТЗ')
 button_see_resume = KeyboardButton('Найти резюме')
-menu_personal = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True).add(button_tz, button_resume,
-                                                              button_see_tz, button_see_resume, button_back)
-# внутри профиля
-button_user = KeyboardButton('Личная информация')
-button_back_Back = KeyboardButton('⬅ Назад')
-menu_profail = ReplyKeyboardMarkup(resize_keyboard=True).add(button_user,
-                                                             button_back_Back)
-
-#личного кабинет
 button_ping = KeyboardButton('Отклики')
+menu_personal = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True).add(
+    button_tz, button_resume,
+    button_see_tz, button_see_resume,
+    button_ping, button_back
+)
+
+# обработка тз
+
+button_create_tz = KeyboardButton('Создать ТЗ')
 button_update = KeyboardButton('Изменить ТЗ')
 button_delete = KeyboardButton('Удалить ТЗ')
 button_user_tz = KeyboardButton('Просмотр своих тз')
-button_user_resume = KeyboardButton('просмотр резюме')
-menu_my_cabinet = ReplyKeyboardMarkup(resize_keyboard=True).add(button_ping, button_update, button_delete,
-                                                                button_user_tz,button_user_resume, button_back_Back)
+menu_tz = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True).add(
+    button_create_tz,
+    button_update,
+    button_delete,
+    button_user_tz,
+    button_back_Back
+)
+# обработка резюме
+
+button_create_resume = KeyboardButton('Создать Резюме')
+button_update_resume = KeyboardButton('Изменить Резюме')
+button_delete_resume = KeyboardButton('Удалить Резюме')
+button_user_resume = KeyboardButton('Просмотр своих Резюме')
+menu_resume = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True).add(
+    button_create_resume,
+    button_update_resume,
+    button_delete_resume,
+    button_user_resume,
+    button_back_Back
+)
