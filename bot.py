@@ -215,18 +215,31 @@ async def search_tz(message: types.Message):
 @dp.message_handler(state=Form.tz_search_tz)
 async def tz_create(message: types.Message, state: FSMContext):
     if message.text == message.text:
-        await message.answer(await tz_search(message.text), reply_markup=nav.keyboard_otklic)
+        tz_list = await tz_search(message.text)
+        for tz_item in tz_list:
+            await message.answer(tz_item, reply_markup=nav.keyboard_otklic)
         await state.finish()
 
 
-@dp.callback_query_handler(Text(equals="отклик"))
+@dp.callback_query_handler(Text(equals=f"{nav.keyboard_otklic_i.callback_data}"))
 async def search_otklic(call: types.CallbackQuery):
     await call.answer(text="Вы откликнулись", show_alert=True)
+    await call.bot.send_message(call.message.chat.id, "Вы откликнулись")
     # await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
 
+    await call.answer(f"зашел @{call.message.from_user.username}")
 
 
-@dp.message_handler(Text(equals='Найти резюме'))
+# 5451836827 - это другой пользователь
+# @dp.message_handler(Text(equals='Вы откликнулись'))
+# async def treatment_tz(message: types.Message):
+#     if message.text == "Вы откликнулись":
+#         await message.answer("dfsd")
+#         chat_id = message.from_user.id
+#         await bot.send_message(chat_id, f"зашел @{message.from_user.username}")
+
+
+@dp.message_handler(Text(equals="Найти резюме"))
 async def search_resume(message: types.Message):
     pass
     # await bot.send_message(message.from_user.id,
@@ -234,7 +247,7 @@ async def search_resume(message: types.Message):
     # await Form.tz_search_tz.set()
 
 
-@dp.message_handler(Text(equals='🤔Полезное'))
+@dp.message_handler(Text(equals="🤔Полезное"))
 async def polza_commands(message: types.Message):
     if message.text == '🤔Полезное':
         await bot.send_message(message.from_user.id, 'Выбери погоду и введи город',
