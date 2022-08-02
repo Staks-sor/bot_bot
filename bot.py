@@ -220,8 +220,8 @@ async def tz_create(message: types.Message, state: FSMContext):
         for tz_item in tz_list:
             await message.answer(f" *Название задачи:* \n {tz_item[1]}"
                                  f"\n *Описание задачи:* \n {tz_item[2]}"
-                                 f"\n *Технологический стек:* \n {tz_item[3]}"
-                                 ,
+                                 f"\n *Технологический стек:* \n {tz_item[3]}",
+
                                  reply_markup=nav.keyboard_otklic, parse_mode="MarkdownV2")
         await state.finish()
 
