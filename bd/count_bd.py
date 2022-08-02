@@ -199,7 +199,6 @@ async def tz_search(search):
             text_cursor_bd = cursor.fetchall()
             print(text_cursor_bd)
 
-
             return text_cursor_bd
     # Обрати внимание на доработку метода вывода^
     except Exception as _ex:
