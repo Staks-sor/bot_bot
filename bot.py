@@ -73,7 +73,7 @@ async def treatment_tz(message: types.Message):
                            reply_markup=nav.menu_tz)
 
 
-@dp.message_handler(Text(equals='Создать ТЗ'))
+@dp.message_handler(Text(equals=f"{nav.crete_tz}"))
 async def create_tz(message: types.Message):
     if await tz_examination(message.from_user.id) == (0,):
         await message.answer("Название задачи")
@@ -157,6 +157,7 @@ async def tz_create(message: types.Message, state: FSMContext):
     else:
         await state.update_data(waiting_for_tz_steck=message.text)
         data = await state.get_data()
+
         await tz_reg(data['waiting_for_tz_title'], data['waiting_for_tz'], data['waiting_for_tz_steck'],
                      int(message.from_user.id))
         await message.answer(f"*{data['waiting_for_tz_title']}* \n {data['waiting_for_tz']} \n "
@@ -186,7 +187,7 @@ async def delete_tz_no(call: types.CallbackQuery):
     await call.message.answer("Удаление отменено")
 
 
-@dp.message_handler(Text(equals='Обработка Резюме'))
+@dp.message_handler(Text(equals=f"Обработка Резюме"))
 async def treatment_resume(message: types.Message):
     await bot.send_message(message.from_user.id, "Здесь вы можете создать изменить"
                                                  " и удалить свои резюме",
@@ -217,7 +218,11 @@ async def tz_create(message: types.Message, state: FSMContext):
     if message.text == message.text:
         tz_list = await tz_search(message.text)
         for tz_item in tz_list:
-            await message.answer(tz_item, reply_markup=nav.keyboard_otklic)
+            await message.answer(f" *Название задачи:* \n {tz_item[1]}"
+                                 f"\n *Описание задачи:* \n {tz_item[2]}"
+                                 f"\n *Технологический стек:* \n {tz_item[3]}"
+                                 ,
+                                 reply_markup=nav.keyboard_otklic, parse_mode="MarkdownV2")
         await state.finish()
 
 
