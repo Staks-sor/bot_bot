@@ -269,6 +269,40 @@ async def get_delete_tz(user_id):
             print("[INFO] PostgreSQL connection closed")
 
 
+async def tz_tz(id_user):
+    global connection
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name,
+            port=port
+        )
+        connection.autocommit = True
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"""SELECT * FROM tz_bot WHERE id_user={id_user};"""
+
+            )
+
+            text_cursor_bd = cursor.fetchone()
+            # print(text_cursor_bd)
+            return text_cursor_bd[4]
+
+    except Exception as _ex:
+        print("[INFO] Error while working with PostgreSQL", _ex)
+    finally:
+        if connection:
+            # cursor.close()
+            connection.close()
+            print("[INFO] PostgreSQL connection closed")
+
+
+
+
+
 if __name__ == "__main__":
     name = ''
     id_us = ''
