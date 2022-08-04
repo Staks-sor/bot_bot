@@ -220,17 +220,22 @@ async def tz_create(message: types.Message, state: FSMContext):
         for tz_item in tz_list:
             await message.answer(f" *Название задачи:* \n {tz_item[1]}"
                                  f"\n *Описание задачи:* \n {tz_item[2]}"
-                                 f"\n *Технологический стек:* \n {tz_item[3]}",
-
+                                 f"\n *Технологический стек:* \n {tz_item[3]} \n *Айди:* \n {tz_item[4]}",
                                  reply_markup=nav.keyboard_otklic, parse_mode="MarkdownV2")
-        await state.finish()
+
+            await state.finish()
 
 
 @dp.callback_query_handler(Text(equals=f"{nav.keyboard_otklic_i.callback_data}"))
-async def search_otklic(call: types.CallbackQuery):
+async def search_otklic(call: types.CallbackQuery, state: FSMContext):
     await call.answer(text="Вы откликнулись", show_alert=True)
+    await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
+    await call.message.answer(call.message.text)
+
     await call.bot.send_message(call.message.chat.id, "Вы откликнулись")
-    # await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
+
+    await state.finish()
+
 
     await call.answer(f"зашел @{call.message.from_user.username}")
 
@@ -425,8 +430,6 @@ async def process_name(message: types.Message, state: FSMContext):
             city = data['city']
             res = open_wether(city, WETHER_TOKEN)
             await message.answer(res)
-
-        await state.finish()
 
 
 async def sending_messages():
