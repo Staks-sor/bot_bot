@@ -1,4 +1,5 @@
 from datetime import datetime
+from unittest.mock import call
 
 from aiogram import Bot, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -7,7 +8,9 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.types import CallbackQuery
 from aiogram.utils import executor
+from aiogram.utils.callback_data import CallbackData
 
 from bd.count_bd import *
 from config.config_token import TOKEN
@@ -15,6 +18,7 @@ from config.config_token import WETHER_TOKEN
 from des.des import *
 from generator.generator import *
 from markup import markup as nav
+
 from wether.wether import open_wether
 
 bot = Bot(token=TOKEN)
@@ -215,39 +219,49 @@ async def search_tz(message: types.Message):
 
 @dp.message_handler(state=Form.tz_search_tz)
 async def tz_create(message: types.Message, state: FSMContext):
+    user_name = message.from_user.username
+
     if message.text == message.text:
         tz_list = await tz_search(message.text)
+        count = 0
         for tz_item in tz_list:
+            keyboard_otklic = types.InlineKeyboardMarkup(row_width=2)
+            keyboard_otklic_i = types.InlineKeyboardButton(text="отклик", callback_data=f"{tz_item[4]}")
+            keyboard_otklic.add(
+                keyboard_otklic_i
+            )
+
+            count += 1
             await message.answer(f" *Название задачи:* \n {tz_item[1]}"
                                  f"\n *Описание задачи:* \n {tz_item[2]}"
-                                 f"\n *Технологический стек:* \n {tz_item[3]} \n *Айди:* \n {tz_item[4]}",
-                                 reply_markup=nav.keyboard_otklic, parse_mode="MarkdownV2")
+                                 f"\n *Технологический стек:* \n {tz_item[3]} {tz_item[4]}",
+                                 reply_markup=keyboard_otklic, parse_mode="MarkdownV2")
 
             await state.finish()
 
-
-
-@dp.callback_query_handler(Text(equals=f"{nav.keyboard_otklic_i.callback_data}"))
-async def search_otklic(call: types.CallbackQuery, state: FSMContext):
-    await call.answer(text="Вы откликнулись", show_alert=True)
-    await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
-    await call.message.answer(call.message.text)
-
-    await call.bot.send_message(call.message.chat.id, "Вы откликнулись")
-
-    await state.finish()
-
-
-    await call.answer(f"зашел @{call.message.from_user.username}")
-
+            async with state.proxy() as data:
+                data['ref1'] = user_name
 
 # 5451836827 - это другой пользователь
-# @dp.message_handler(Text(equals='Вы откликнулись'))
-# async def treatment_tz(message: types.Message):
-#     if message.text == "Вы откликнулись":
-#         await message.answer("dfsd")
-#         chat_id = message.from_user.id
-#         await bot.send_message(chat_id, f"зашел @{message.from_user.username}")
+
+
+@dp.callback_query_handler()
+async def search_otklic(call: types.CallbackQuery, state: FSMContext):
+    await call.answer(text="Вы откликнулись", show_alert=True)
+
+    # await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
+    bb = call.data
+    qq = call.message.text
+    price = int(''.join(filter(str.isdigit, qq)))
+    print(bb, "i'm bb", price)
+    async with state.proxy() as data:
+        ref_id_1lv = data['ref1']
+        await call.bot.send_message(price, f"Откликнулся @{ref_id_1lv}")
+
+        print(ref_id_1lv)
+
+
+    # await state.finish()
 
 
 @dp.message_handler(Text(equals="Найти резюме"))
