@@ -102,8 +102,4 @@ keyboard_delete.add(
 )
 
 # кнопка отклика
-keyboard_otklic = types.InlineKeyboardMarkup(row_width=2)
-keyboard_otklic_i = types.InlineKeyboardButton(text="Откликнуться", callback_data="отклик")
-keyboard_otklic.add(
-    keyboard_otklic_i
-)
+
