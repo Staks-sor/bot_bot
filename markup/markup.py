@@ -101,5 +101,18 @@ keyboard_delete.add(
     keyboard_delete_yes, keyboard_delete_no
 )
 
-# кнопка отклика
 
+# кнопка отклика
+def otclick(click):
+    keyboard_otklic = types.InlineKeyboardMarkup(row_width=1)
+    keyboard_otklic_i = types.InlineKeyboardButton(text="отклик", callback_data=f"cl{click}")
+    keyboard_otklic.add(
+        keyboard_otklic_i
+    )
+    return keyboard_otklic
+
+
+# message_id = call.message.message_id
+# chat_id = call.message.chat.id
+INKB_r = InlineKeyboardMarkup(row_width=3, one_time_keyboard=True).insert(InlineKeyboardButton(text="Вы откликнулись 👌",
+                                                                                               callback_data=""))
