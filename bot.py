@@ -8,7 +8,7 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, callback_query
 from aiogram.utils import executor
 from aiogram.utils.callback_data import CallbackData
 
@@ -18,7 +18,6 @@ from config.config_token import WETHER_TOKEN
 from des.des import *
 from generator.generator import *
 from markup import markup as nav
-
 from wether.wether import open_wether
 
 bot = Bot(token=TOKEN)
@@ -223,45 +222,27 @@ async def tz_create(message: types.Message, state: FSMContext):
 
     if message.text == message.text:
         tz_list = await tz_search(message.text)
-        count = 0
         for tz_item in tz_list:
-            keyboard_otklic = types.InlineKeyboardMarkup(row_width=2)
-            keyboard_otklic_i = types.InlineKeyboardButton(text="отклик", callback_data=f"{tz_item[4]}")
-            keyboard_otklic.add(
-                keyboard_otklic_i
-            )
-
-            count += 1
             await message.answer(f" *Название задачи:* \n {tz_item[1]}"
                                  f"\n *Описание задачи:* \n {tz_item[2]}"
-                                 f"\n *Технологический стек:* \n {tz_item[3]} {tz_item[4]}",
-                                 reply_markup=keyboard_otklic, parse_mode="MarkdownV2")
-
+                                 f"\n *Технологический стек:* \n {tz_item[3]}",
+                                 reply_markup=nav.otclick(tz_item[4]), parse_mode="MarkdownV2")
             await state.finish()
-
             async with state.proxy() as data:
                 data['ref1'] = user_name
 
-# 5451836827 - это другой пользователь
 
-
-@dp.callback_query_handler()
+@dp.callback_query_handler(Text(startswith='cl'))
 async def search_otklic(call: types.CallbackQuery, state: FSMContext):
     await call.answer(text="Вы откликнулись", show_alert=True)
 
-    # await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
-    bb = call.data
-    qq = call.message.text
-    price = int(''.join(filter(str.isdigit, qq)))
-    print(bb, "i'm bb", price)
+    await call.bot.edit_message_reply_markup(chat_id=call.from_user.id,
+        message_id=call.message.message_id, reply_markup=nav.INKB_r)
     async with state.proxy() as data:
         ref_id_1lv = data['ref1']
-        await call.bot.send_message(price, f"Откликнулся @{ref_id_1lv}")
+        await call.bot.send_message(call.data[2:], f"Откликнулся @{ref_id_1lv}")
 
-        print(ref_id_1lv)
-
-
-    # await state.finish()
+        # await state.finish()
 
 
 @dp.message_handler(Text(equals="Найти резюме"))
