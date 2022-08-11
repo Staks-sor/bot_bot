@@ -1,5 +1,5 @@
+# -*- coding: utf-8 -*-
 from datetime import datetime
-from unittest.mock import call
 
 from aiogram import Bot, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -8,9 +8,7 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, callback_query
 from aiogram.utils import executor
-from aiogram.utils.callback_data import CallbackData
 
 from bd.count_bd import *
 from config.config_token import TOKEN
@@ -24,9 +22,6 @@ bot = Bot(token=TOKEN)
 loop = asyncio.get_event_loop()
 dp = Dispatcher(bot, storage=MemoryStorage(), loop=loop)
 dp.middleware.setup(LoggingMiddleware())
-
-index = int(get_id_index())
-print(index, "Это индекс")
 
 
 class Form(StatesGroup):
@@ -237,7 +232,7 @@ async def search_otklic(call: types.CallbackQuery, state: FSMContext):
     await call.answer(text="Вы откликнулись", show_alert=True)
 
     await call.bot.edit_message_reply_markup(chat_id=call.from_user.id,
-        message_id=call.message.message_id, reply_markup=nav.INKB_r)
+                                             message_id=call.message.message_id, reply_markup=nav.INKB_r)
     async with state.proxy() as data:
         ref_id_1lv = data['ref1']
         await call.bot.send_message(call.data[2:], f"Откликнулся @{ref_id_1lv}")
@@ -247,10 +242,9 @@ async def search_otklic(call: types.CallbackQuery, state: FSMContext):
 
 @dp.message_handler(Text(equals="Найти резюме"))
 async def search_resume(message: types.Message):
-    pass
-    # await bot.send_message(message.from_user.id,
-    #                        "Введите ключевые слова поиска (python, java, django)")
-    # await Form.tz_search_tz.set()
+    await bot.send_message(message.from_user.id,
+                           "Введите ключевые слова поиска (python, java, django)")
+    await Form.tz_search_tz.set()
 
 
 @dp.message_handler(Text(equals="🤔Полезное"))
@@ -344,73 +338,73 @@ async def main_commands(message: types.Message):
 
 @dp.callback_query_handler(Text(equals="Овен"))
 async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Овен", id=index)
+    goro = await get_connect_heroku_bd(zodiac="Овен", id=int(get_id_index()))
     await call.message.answer(goro)
 
 
 @dp.callback_query_handler(Text(equals="Телец"))
 async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Телец", id=index)
+    goro = await get_connect_heroku_bd(zodiac="Телец", id=int(get_id_index()))
     await call.message.answer(goro)
 
 
 @dp.callback_query_handler(Text(equals="Близнецы"))
 async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Близнецы", id=index)
+    goro = await get_connect_heroku_bd(zodiac="Близнецы", id=int(get_id_index()))
     await call.message.answer(goro)
 
 
 @dp.callback_query_handler(Text(equals="Рак"))
 async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Рак", id=index)
+    goro = await get_connect_heroku_bd(zodiac="Рак", id=int(get_id_index()))
     await call.message.answer(goro)
 
 
 @dp.callback_query_handler(Text(equals="Лев"))
 async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Лев", id=index)
+    goro = await get_connect_heroku_bd(zodiac="Лев", id=int(get_id_index()))
     await call.message.answer(goro)
 
 
 @dp.callback_query_handler(Text(equals="Дева"))
 async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Дева", id=index)
+    goro = await get_connect_heroku_bd(zodiac="Дева", id=int(get_id_index()))
     await call.message.answer(goro)
 
 
 @dp.callback_query_handler(Text(equals="Весы"))
 async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Весы", id=index)
+    goro = await get_connect_heroku_bd(zodiac="Весы", id=int(get_id_index()))
     await call.message.answer(goro)
 
 
 @dp.callback_query_handler(Text(equals="Скорпион"))
 async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Скорпион", id=index)
+    goro = await get_connect_heroku_bd(zodiac="Скорпион", id=int(get_id_index()))
     await call.message.answer(goro)
 
 
 @dp.callback_query_handler(Text(equals="Стрелец"))
 async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Стрелец", id=index)
+    goro = await get_connect_heroku_bd(zodiac="Стрелец", id=int(get_id_index()))
     await call.message.answer(goro)
 
 
 @dp.callback_query_handler(Text(equals="Козерог"))
 async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Козерог", id=index)
+    goro = await get_connect_heroku_bd(zodiac="Козерог", id=int(get_id_index()))
     await call.message.answer(goro)
 
 
 @dp.callback_query_handler(Text(equals="Водолей"))
 async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Водолей", id=index)
+    goro = await get_connect_heroku_bd(zodiac="Водолей", id=int(get_id_index()))
     await call.message.answer(goro)
 
 
 @dp.callback_query_handler(Text(equals="Рыбы"))
 async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Рыбы", id=index)
+    goro = await get_connect_heroku_bd(zodiac="Рыбы", id=int(get_id_index()))
     await call.message.answer(goro)
 
 
@@ -429,7 +423,8 @@ async def process_name(message: types.Message, state: FSMContext):
 
 
 async def sending_messages():
-    global index
+    index = int(get_id_index())
+    print(index, "Это индекс")
     while True:
         time_now = datetime.now()
         print(time_now.hour)
