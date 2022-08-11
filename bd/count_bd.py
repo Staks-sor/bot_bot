@@ -304,13 +304,14 @@ async def tz_tz(id_user):
 
 
 if __name__ == "__main__":
-    name = ''
-    id_us = ''
-    ioloop = asyncio.get_event_loop()
-    tasks = [ioloop.create_task(get_connect_heroku_bd(zodiac="Овен", id=1)), ioloop.create_task(get_id()),
-             ioloop.create_task(get_id_index()), ioloop.create_task(user_reg(name, id_us)),
-             ioloop.create_task(user_examination(user_id=user)), ioloop.create_task(tz_search(search='steck')),
-             ioloop.create_task(get_delete_tz(user_id=user))]
-    wait_tasks = asyncio.wait(tasks)
-    ioloop.run_until_complete(wait_tasks)
-    ioloop.close()
+    pass
+    # name = ''
+    # id_us = ''
+    # ioloop = asyncio.get_event_loop()
+    # tasks = [ioloop.create_task(get_connect_heroku_bd(zodiac="Овен", id=1)), ioloop.create_task(get_id()),
+    #          ioloop.create_task(get_id_index()), ioloop.create_task(user_reg(name, id_us)),
+    #          ioloop.create_task(user_examination(user_id=user)), ioloop.create_task(tz_search(search='steck')),
+    #          ioloop.create_task(get_delete_tz(user_id=user))]
+    # wait_tasks = asyncio.wait(tasks)
+    # ioloop.run_until_complete(wait_tasks)
+    # ioloop.close()
