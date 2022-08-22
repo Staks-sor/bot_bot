@@ -114,5 +114,6 @@ def otclick(click):
 
 # message_id = call.message.message_id
 # chat_id = call.message.chat.id
-INKB_r = InlineKeyboardMarkup(row_width=3, one_time_keyboard=True).insert(InlineKeyboardButton(text="Вы откликнулись 👌",
-                                                                                               callback_data=""))
+you_already_answered = "повторный отклик"
+INKB_r = types.InlineKeyboardMarkup(row_width=3, one_time_keyboard=True)
+INKB_r.add(InlineKeyboardButton(text="Вы откликнулись 👌", callback_data=f"{you_already_answered}"))

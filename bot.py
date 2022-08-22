@@ -213,8 +213,8 @@ async def search_tz(message: types.Message):
 
 @dp.message_handler(state=Form.tz_search_tz)
 async def tz_create(message: types.Message, state: FSMContext):
-    user_name = message.from_user.username
-
+    user_name_id = message.from_user.id
+    user_name = message.from_user.first_name
     if message.text == message.text:
         tz_list = await tz_search(message.text)
         for tz_item in tz_list:
@@ -224,20 +224,28 @@ async def tz_create(message: types.Message, state: FSMContext):
                                  reply_markup=nav.otclick(tz_item[4]), parse_mode="MarkdownV2")
             await state.finish()
             async with state.proxy() as data:
-                data['ref1'] = user_name
-
+                data['ref1'] = user_name_id
+                data['ref2'] = user_name
 
 @dp.callback_query_handler(Text(startswith='cl'))
 async def search_otklic(call: types.CallbackQuery, state: FSMContext):
     await call.answer(text="Вы откликнулись", show_alert=True)
-
     await call.bot.edit_message_reply_markup(chat_id=call.from_user.id,
                                              message_id=call.message.message_id, reply_markup=nav.INKB_r)
     async with state.proxy() as data:
         ref_id_1lv = data['ref1']
-        await call.bot.send_message(call.data[2:], f"Откликнулся @{ref_id_1lv}")
+        ref_id_2lv = data['ref2']
 
-        # await state.finish()
+        mention = "[" + ref_id_2lv + "](tg://user?id=" + str(ref_id_1lv) + ")"
+        response = f"Откликнулся, {mention}"
+        await call.bot.send_message(call.data[2:], text=response,
+                                    parse_mode="MarkdownV2")
+        print(call.data[2:], '<-это айди задачи(пользователя который создал) ', ref_id_1lv)
+
+
+@dp.callback_query_handler(Text(equals=f"{nav.you_already_answered}"))
+async def already_touch(call: types.CallbackQuery):
+    await call.answer(text="Вы уже откликнулись", show_alert=True)
 
 
 @dp.message_handler(Text(equals="Найти резюме"))
