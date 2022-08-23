@@ -68,8 +68,10 @@ menu_personal = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True).add(
 )
 
 # обработка тз
-crete_tz = 'Создать ТЗ'
-button_create_tz = KeyboardButton(crete_tz)
+create_vacant = 'Создать\nвакансию'
+update_vacant = "Изменить вакансию"
+delete_vacant = 'Удалить вакансию'
+button_create_tz = KeyboardButton(create_vacant)
 button_update = KeyboardButton('Изменить ТЗ')
 button_delete = KeyboardButton('Удалить ТЗ')
 button_user_tz = KeyboardButton('Просмотр своих тз')
