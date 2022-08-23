@@ -71,7 +71,7 @@ async def treatment_tz(message: types.Message):
                            reply_markup=nav.menu_tz)
 
 
-@dp.message_handler(Text(equals=f"{nav.crete_tz}"))
+@dp.message_handler(Text(equals=f"{nav.create_vacant}"))
 async def create_tz(message: types.Message):
     if await tz_examination(message.from_user.id) == (0,):
         await message.answer("Название задачи")
@@ -227,20 +227,25 @@ async def tz_create(message: types.Message, state: FSMContext):
                 data['ref1'] = user_name_id
                 data['ref2'] = user_name
 
+
 @dp.callback_query_handler(Text(startswith='cl'))
 async def search_otklic(call: types.CallbackQuery, state: FSMContext):
-    await call.answer(text="Вы откликнулись", show_alert=True)
-    await call.bot.edit_message_reply_markup(chat_id=call.from_user.id,
-                                             message_id=call.message.message_id, reply_markup=nav.INKB_r)
     async with state.proxy() as data:
-        ref_id_1lv = data['ref1']
-        ref_id_2lv = data['ref2']
+        user_name_id = data['ref1']
+        user_name = data['ref2']
+        if int(call.data[2:]) == int(user_name_id):
+            await call.answer(text="Это ваше задание", show_alert=True)
+        else:
+            print(type(int(call.data[2:])), type(int(user_name_id)))
+            await call.answer(text="Вы откликнулись", show_alert=True)
+            await call.bot.edit_message_reply_markup(chat_id=call.from_user.id,
+                                                     message_id=call.message.message_id, reply_markup=nav.INKB_r)
 
-        mention = "[" + ref_id_2lv + "](tg://user?id=" + str(ref_id_1lv) + ")"
-        response = f"Откликнулся, {mention}"
-        await call.bot.send_message(call.data[2:], text=response,
-                                    parse_mode="MarkdownV2")
-        print(call.data[2:], '<-это айди задачи(пользователя который создал) ', ref_id_1lv)
+            mention = "[" + user_name + "](tg://user?id=" + str(user_name_id) + ")"
+            response = f"Откликнулся, {mention}"
+            await call.bot.send_message(call.data[2:], text=response,
+                                        parse_mode="MarkdownV2")
+            print(call.data[2:], '<-это айди задачи(пользователя который создал) ', user_name_id)
 
 
 @dp.callback_query_handler(Text(equals=f"{nav.you_already_answered}"))
