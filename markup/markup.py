@@ -56,9 +56,10 @@ keyboard.add(
 )
 
 # профиль
+search_vacan = 'Найти ТЗ'
 button_tz = KeyboardButton('Обработка ТЗ')
 button_resume = KeyboardButton('Обработка Резюме')
-button_see_tz = KeyboardButton('Найти ТЗ')
+button_see_tz = KeyboardButton(search_vacan)
 button_see_resume = KeyboardButton('Найти резюме')
 button_ping = KeyboardButton('Отклики')
 menu_personal = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True).add(
@@ -68,13 +69,14 @@ menu_personal = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True).add(
 )
 
 # обработка тз
-create_vacant = 'Создать\nвакансию'
-update_vacant = "Изменить вакансию"
+create_vacant = 'Создать вакансию'
+update_vacant = 'Изменить вакансию'
 delete_vacant = 'Удалить вакансию'
+view_vacant   = 'Просмотр своей вакансии'
 button_create_tz = KeyboardButton(create_vacant)
-button_update = KeyboardButton('Изменить ТЗ')
-button_delete = KeyboardButton('Удалить ТЗ')
-button_user_tz = KeyboardButton('Просмотр своих тз')
+button_update = KeyboardButton(update_vacant)
+button_delete = KeyboardButton(delete_vacant)
+button_user_tz = KeyboardButton(view_vacant)
 menu_tz = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True).add(
     button_create_tz,
     button_update,
