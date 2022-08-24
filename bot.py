@@ -204,7 +204,7 @@ async def create_resume(message: types.Message):
                                reply_markup=nav.menu_resume)
 
 
-@dp.message_handler(Text(equals='Найти ТЗ'))
+@dp.message_handler(Text(equals=nav.search_vacan))
 async def search_tz(message: types.Message):
     await bot.send_message(message.from_user.id,
                            "Введите ключевые слова поиска (python, java, django)")
@@ -217,6 +217,9 @@ async def tz_create(message: types.Message, state: FSMContext):
     user_name = message.from_user.first_name
     if message.text == message.text:
         tz_list = await tz_search(message.text)
+        if tz_list == []:
+            await state.finish()
+            await message.answer('Поиск не дал результатов повторите поиск, возможно вы ввели некоректные данные')
         for tz_item in tz_list:
             await message.answer(f" *Название задачи:* \n {tz_item[1]}"
                                  f"\n *Описание задачи:* \n {tz_item[2]}"
