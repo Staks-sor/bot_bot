@@ -56,11 +56,14 @@ keyboard.add(
 )
 
 # профиль
-search_vacan = 'Найти ТЗ'
-button_tz = KeyboardButton('Обработка ТЗ')
-button_resume = KeyboardButton('Обработка Резюме')
+search_vacan = 'Найти вакансию'
+work_vacan = 'Работа с вакансией'
+work_resume = 'работа с Резюме'
+search_resume = 'Найти резюме'
+button_tz = KeyboardButton(work_vacan)
+button_resume = KeyboardButton(work_resume)
 button_see_tz = KeyboardButton(search_vacan)
-button_see_resume = KeyboardButton('Найти резюме')
+button_see_resume = KeyboardButton(search_resume)
 button_ping = KeyboardButton('Отклики')
 menu_personal = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True).add(
     button_tz, button_resume,
@@ -72,7 +75,7 @@ menu_personal = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True).add(
 create_vacant = 'Создать вакансию'
 update_vacant = 'Изменить вакансию'
 delete_vacant = 'Удалить вакансию'
-view_vacant   = 'Просмотр своей вакансии'
+view_vacant = 'Просмотр своей вакансии'
 button_create_tz = KeyboardButton(create_vacant)
 button_update = KeyboardButton(update_vacant)
 button_delete = KeyboardButton(delete_vacant)
@@ -86,6 +89,7 @@ menu_tz = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True).add(
 )
 # обработка резюме
 
+
 button_create_resume = KeyboardButton('Создать Резюме')
 button_update_resume = KeyboardButton('Изменить Резюме')
 button_delete_resume = KeyboardButton('Удалить Резюме')
@@ -98,9 +102,11 @@ menu_resume = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True).add(
     button_back_Back
 )
 # удаление технического задания
+yes = "Да"
+no = "Нет"
 keyboard_delete = types.InlineKeyboardMarkup(row_width=2)
-keyboard_delete_yes = types.InlineKeyboardButton(text="Да", callback_data="Да")
-keyboard_delete_no = types.InlineKeyboardButton(text="Нет", callback_data="Нет")
+keyboard_delete_yes = types.InlineKeyboardButton(text="Да", callback_data=yes)
+keyboard_delete_no = types.InlineKeyboardButton(text="Нет", callback_data=no)
 keyboard_delete.add(
     keyboard_delete_yes, keyboard_delete_no
 )
@@ -116,8 +122,6 @@ def otclick(click):
     return keyboard_otklic
 
 
-# message_id = call.message.message_id
-# chat_id = call.message.chat.id
 you_already_answered = "повторный отклик"
 INKB_r = types.InlineKeyboardMarkup(row_width=3, one_time_keyboard=True)
 INKB_r.add(InlineKeyboardButton(text="Вы откликнулись 👌", callback_data=f"{you_already_answered}"))

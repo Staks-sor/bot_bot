@@ -326,7 +326,8 @@ async def otklick_create(create_user_id, user_id):
             connection.close()
             print("[INFO] PostgreSQL connection closed")
 
-async def get_otklic():
+
+async def get_otklic(search_create, search_id):
     global connection
     try:
         connection = psycopg2.connect(
@@ -340,13 +341,15 @@ async def get_otklic():
 
         with connection.cursor() as cursor:
             cursor.execute(
-                f"""SELECT * FROM public.otklic_bot;"""
+                # f"""SELECT * FROM otklic_bot WHERE user_create_id  = {search_create};"""
+                f"""SELECT * FROM otklic_bot WHERE user_id = {search_id}
+                 AND user_create_id  = {search_create};"""
 
             )
 
             text_cursor_bd = cursor.fetchone()
-            print(text_cursor_bd[0], text_cursor_bd[1])
-            return text_cursor_bd[0], text_cursor_bd[1]
+
+            return text_cursor_bd
 
     except Exception as _ex:
         print("[INFO] Error while working with PostgreSQL", _ex)
@@ -355,6 +358,39 @@ async def get_otklic():
             # cursor.close()
             connection.close()
             print("[INFO] PostgreSQL connection closed")
+
+async def vacant_update(search):
+    global connection
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name,
+            port=port
+        )
+        connection.autocommit = True
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"""SELECT * FROM tz_bot WHERE id_user = {search};"""
+            )
+            print("[INFO] поиск выполнен PostgreSQL")
+            text_cursor_bd = cursor.fetchone()
+            print(text_cursor_bd)
+
+            return text_cursor_bd
+    # Обрати внимание на доработку метода вывода^
+    except Exception as _ex:
+        print("[INFO] Error while working with PostgreSQL", _ex)
+    finally:
+        if connection:
+            # cursor.close()
+            connection.close()
+            print("[INFO] PostgreSQL connection closed")
+
+
+
 
 
 if __name__ == "__main__":

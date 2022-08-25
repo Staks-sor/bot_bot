@@ -37,7 +37,7 @@ class Form(StatesGroup):
 async def process_start_command(message: types.Message):
     await bot.send_message(message.from_user.id,
                            f'Привет {message.from_user.first_name}'
-                           f'! \n Я бот для развлечения(пока только для развлечения)',
+                           f'! \n Я бот для поиска вакансий и работников',
                            reply_markup=nav.mainMenu)
     chat_id = 459830083
     await bot.send_message(chat_id, f"зашел {message.from_user.username}")
@@ -63,7 +63,7 @@ async def registration_commands(message: types.Message):
         await bot.send_message(message.from_user.id, "Вы вошли в личный кабинет", reply_markup=nav.menu_personal)
 
 
-@dp.message_handler(Text(equals='Обработка ТЗ'))
+@dp.message_handler(Text(equals=nav.work_vacan))
 async def treatment_tz(message: types.Message):
     await bot.send_message(message.from_user.id, "Здесь вы можете создать изменить"
                                                  " и удалить свои технические задания",
@@ -164,13 +164,13 @@ async def tz_create(message: types.Message, state: FSMContext):
         await state.finish()
 
 
-@dp.message_handler(Text(equals='Удалить ТЗ'))
+@dp.message_handler(Text(equals=nav.delete_vacant))
 async def tz_delete(message: types.Message):
     await message.answer("Точно хотите удалить техническое задание?",
                          reply_markup=nav.keyboard_delete, parse_mode="MarkdownV2")
 
 
-@dp.callback_query_handler(Text(equals="Да"))
+@dp.callback_query_handler(Text(equals=nav.yes))
 async def delete_tz(call: types.CallbackQuery):
     await call.answer(text="Успешно удалено", show_alert=True)
     await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
@@ -178,14 +178,21 @@ async def delete_tz(call: types.CallbackQuery):
     await call.message.answer("Успешно удалено")
 
 
-@dp.callback_query_handler(text="Нет")
+@dp.callback_query_handler(Text(equals=nav.no))
 async def delete_tz_no(call: types.CallbackQuery):
     await call.answer(text="Удаление отменено", show_alert=True)
     await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
     await call.message.answer("Удаление отменено")
 
 
-@dp.message_handler(Text(equals=f"Обработка Резюме"))
+@dp.message_handler(Text(equals=nav.view_vacant))
+async def view_vacant(message: types.Message):
+    tz = await vacant_update(message.from_user.id)
+    await message.answer(f"Ваша вакансия \n *Название*\n {tz[1]} \n *что нужно сделать*\n{tz[2]} \n *Стек*\n {tz[3]}",
+                         parse_mode="MarkdownV2")
+
+
+@dp.message_handler(Text(equals=nav.work_resume))
 async def treatment_resume(message: types.Message):
     await bot.send_message(message.from_user.id, "Здесь вы можете создать изменить"
                                                  " и удалить свои резюме",
@@ -221,24 +228,20 @@ async def tz_create(message: types.Message, state: FSMContext):
             await state.finish()
             await message.answer('Поиск не дал результатов повторите поиск, возможно вы ввели некоректные данные')
         for tz_item in tz_list:
-            gg = await get_otklic()
+            try:
+                gg = await get_otklic(search_create=tz_item[4], search_id=user_name_id)
 
-            if gg[0] != tz_item[4]:
-
-                await message.answer(f" *Название задачи:* \n {tz_item[1]}"
-                                     f"\n *Описание задачи:* \n {tz_item[2]}"
-                                     f"\n *Технологический стек:* \n {tz_item[3]}",
-                                     reply_markup=nav.INKB_r, parse_mode="MarkdownV2")
-
-
-            elif gg[0] == tz_item[4]:
+                if gg[0] == tz_item[4] and user_name_id:
+                    await message.answer(f" *Название задачи:* \n {tz_item[1]}"
+                                         f"\n *Описание задачи:* \n {tz_item[2]}"
+                                         f"\n *Технологический стек:* \n {tz_item[3]}",
+                                         reply_markup=nav.INKB_r, parse_mode="MarkdownV2")
+            except TypeError:
+                print('tut bila oshibka')
                 await message.answer(f" *Название задачи:* \n {tz_item[1]}"
                                      f"\n *Описание задачи:* \n {tz_item[2]}"
                                      f"\n *Технологический стек:* \n {tz_item[3]}",
                                      reply_markup=nav.otclick(tz_item[4]), parse_mode="MarkdownV2")
-
-                # await bot.edit_message_reply_markup(chat_id=message.from_user.id,
-                #                                     message_id=message.message_id, reply_markup=nav.INKB_r)
 
                 await state.finish()
                 async with state.proxy() as data:
@@ -272,7 +275,7 @@ async def already_touch(call: types.CallbackQuery):
     await call.answer(text="Вы уже откликнулись", show_alert=True)
 
 
-@dp.message_handler(Text(equals="Найти резюме"))
+@dp.message_handler(Text(equals=nav.search_resume))
 async def search_resume(message: types.Message):
     await bot.send_message(message.from_user.id,
                            "Введите ключевые слова поиска (python, java, django)")
