@@ -221,14 +221,29 @@ async def tz_create(message: types.Message, state: FSMContext):
             await state.finish()
             await message.answer('Поиск не дал результатов повторите поиск, возможно вы ввели некоректные данные')
         for tz_item in tz_list:
-            await message.answer(f" *Название задачи:* \n {tz_item[1]}"
-                                 f"\n *Описание задачи:* \n {tz_item[2]}"
-                                 f"\n *Технологический стек:* \n {tz_item[3]}",
-                                 reply_markup=nav.otclick(tz_item[4]), parse_mode="MarkdownV2")
-            await state.finish()
-            async with state.proxy() as data:
-                data['ref1'] = user_name_id
-                data['ref2'] = user_name
+            gg = await get_otklic()
+
+            if gg[0] != tz_item[4]:
+
+                await message.answer(f" *Название задачи:* \n {tz_item[1]}"
+                                     f"\n *Описание задачи:* \n {tz_item[2]}"
+                                     f"\n *Технологический стек:* \n {tz_item[3]}",
+                                     reply_markup=nav.INKB_r, parse_mode="MarkdownV2")
+
+
+            elif gg[0] == tz_item[4]:
+                await message.answer(f" *Название задачи:* \n {tz_item[1]}"
+                                     f"\n *Описание задачи:* \n {tz_item[2]}"
+                                     f"\n *Технологический стек:* \n {tz_item[3]}",
+                                     reply_markup=nav.otclick(tz_item[4]), parse_mode="MarkdownV2")
+
+                # await bot.edit_message_reply_markup(chat_id=message.from_user.id,
+                #                                     message_id=message.message_id, reply_markup=nav.INKB_r)
+
+                await state.finish()
+                async with state.proxy() as data:
+                    data['ref1'] = user_name_id
+                    data['ref2'] = user_name
 
 
 @dp.callback_query_handler(Text(startswith='cl'))
@@ -249,6 +264,7 @@ async def search_otklic(call: types.CallbackQuery, state: FSMContext):
             await call.bot.send_message(call.data[2:], text=response,
                                         parse_mode="MarkdownV2")
             print(call.data[2:], '<-это айди задачи(пользователя который создал) ', user_name_id)
+            await otklick_create(call.data[2:], user_name_id)
 
 
 @dp.callback_query_handler(Text(equals=f"{nav.you_already_answered}"))
