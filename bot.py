@@ -237,16 +237,15 @@ async def tz_create(message: types.Message, state: FSMContext):
                                          f"\n *Технологический стек:* \n {tz_item[3]}",
                                          reply_markup=nav.INKB_r, parse_mode="MarkdownV2")
             except TypeError:
-                print('tut bila oshibka')
                 await message.answer(f" *Название задачи:* \n {tz_item[1]}"
                                      f"\n *Описание задачи:* \n {tz_item[2]}"
                                      f"\n *Технологический стек:* \n {tz_item[3]}",
                                      reply_markup=nav.otclick(tz_item[4]), parse_mode="MarkdownV2")
 
                 await state.finish()
-                async with state.proxy() as data:
-                    data['ref1'] = user_name_id
-                    data['ref2'] = user_name
+    async with state.proxy() as data:
+        data['ref1'] = user_name_id
+        data['ref2'] = user_name
 
 
 @dp.callback_query_handler(Text(startswith='cl'))
