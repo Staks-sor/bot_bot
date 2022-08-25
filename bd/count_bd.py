@@ -300,7 +300,61 @@ async def tz_tz(id_user):
             print("[INFO] PostgreSQL connection closed")
 
 
+async def otklick_create(create_user_id, user_id):
+    global connection
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name,
+            port=port
+        )
+        connection.autocommit = True
 
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"""INSERT INTO otklic_bot (user_create_id, user_id)
+                 VALUES('{create_user_id}', {user_id});"""
+            )
+
+    except Exception as _ex:
+        print("[INFO] Error while working with PostgreSQL", _ex)
+    finally:
+        if connection:
+            # cursor.close()
+            connection.close()
+            print("[INFO] PostgreSQL connection closed")
+
+async def get_otklic():
+    global connection
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name,
+            port=port
+        )
+        connection.autocommit = True
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"""SELECT * FROM public.otklic_bot;"""
+
+            )
+
+            text_cursor_bd = cursor.fetchone()
+            print(text_cursor_bd[0], text_cursor_bd[1])
+            return text_cursor_bd[0], text_cursor_bd[1]
+
+    except Exception as _ex:
+        print("[INFO] Error while working with PostgreSQL", _ex)
+    finally:
+        if connection:
+            # cursor.close()
+            connection.close()
+            print("[INFO] PostgreSQL connection closed")
 
 
 if __name__ == "__main__":
