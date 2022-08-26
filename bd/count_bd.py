@@ -3,7 +3,6 @@ import asyncio
 import psycopg2
 
 from bd.config import host, user, password, db_name, port
-import re
 
 
 async def get_connect_heroku_bd(zodiac, id):
@@ -359,6 +358,7 @@ async def get_otklic(search_create, search_id):
             connection.close()
             print("[INFO] PostgreSQL connection closed")
 
+
 async def vacant_update(search):
     global connection
     try:
@@ -388,9 +388,6 @@ async def vacant_update(search):
             # cursor.close()
             connection.close()
             print("[INFO] PostgreSQL connection closed")
-
-
-
 
 
 if __name__ == "__main__":

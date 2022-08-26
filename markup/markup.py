@@ -33,19 +33,31 @@ button_gor = KeyboardButton('Получить гороскоп')
 goroskop_menu = ReplyKeyboardMarkup(resize_keyboard=True).add(button_gor, button_back)
 
 # inline buttom
+oven = "Овен"
+telec = "Телец"
+bliznec = "Близнецы"
+rack = "Рак"
+deva = "Дева"
+vesi = "Весы"
+scorpio = "Скорпион"
+strelec = "Стрелец"
+kozerog = "Козерог"
+vodol = "Водолей"
+fish = "Рыбы"
+leo = "Лев"
 keyboard = types.InlineKeyboardMarkup(row_width=3)
-keyboard1 = types.InlineKeyboardButton(text="♈Овен", callback_data="Овен")
-keyboard2 = types.InlineKeyboardButton(text="♉Телец", callback_data="Телец")
-keyboard3 = types.InlineKeyboardButton(text="♊Близнецы", callback_data="Близнецы")
-keyboard4 = types.InlineKeyboardButton(text="♋Рак", callback_data="Рак")
-keyboard5 = types.InlineKeyboardButton(text="♍Дева", callback_data="Дева")
-keyboard6 = types.InlineKeyboardButton(text="♎Весы", callback_data="Весы")
-keyboard7 = types.InlineKeyboardButton(text="♏Скорпион", callback_data="Скорпион")
-keyboard8 = types.InlineKeyboardButton(text="♐Стрелец", callback_data="Стрелец")
-keyboard9 = types.InlineKeyboardButton(text="♑Козерог", callback_data="Козерог")
-keyboard10 = types.InlineKeyboardButton(text="♒Водолей", callback_data="Водолей")
-keyboard11 = types.InlineKeyboardButton(text="♓Рыбы", callback_data="Рыбы")
-keyboard12 = types.InlineKeyboardButton(text="♌Лев", callback_data="Лев")
+keyboard1 = types.InlineKeyboardButton(text="♈Овен", callback_data=f'bb{oven}')
+keyboard2 = types.InlineKeyboardButton(text="♉Телец", callback_data=f'bb{telec}')
+keyboard3 = types.InlineKeyboardButton(text="♊Близнецы", callback_data=f'bb{bliznec}')
+keyboard4 = types.InlineKeyboardButton(text="♋Рак", callback_data=f'bb{rack}')
+keyboard5 = types.InlineKeyboardButton(text="♍Дева", callback_data=f'bb{deva}')
+keyboard6 = types.InlineKeyboardButton(text="♎Весы", callback_data=f'bb{vesi}')
+keyboard7 = types.InlineKeyboardButton(text="♏Скорпион", callback_data=f'bb{scorpio}')
+keyboard8 = types.InlineKeyboardButton(text="♐Стрелец", callback_data=f'bb{strelec}')
+keyboard9 = types.InlineKeyboardButton(text="♑Козерог", callback_data=f'bb{kozerog}')
+keyboard10 = types.InlineKeyboardButton(text="♒Водолей", callback_data=f'bb{vodol}')
+keyboard11 = types.InlineKeyboardButton(text="♓Рыбы", callback_data=f'bb{fish}')
+keyboard12 = types.InlineKeyboardButton(text="♌Лев", callback_data=f'bb{leo}')
 keyboard.add(
     keyboard1, keyboard2,
     keyboard3, keyboard4,

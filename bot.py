@@ -158,8 +158,8 @@ async def tz_create(message: types.Message, state: FSMContext):
 
         await tz_reg(data['waiting_for_tz_title'], data['waiting_for_tz'], data['waiting_for_tz_steck'],
                      int(message.from_user.id))
-        await message.answer(f"*{data['waiting_for_tz_title']}* \n {data['waiting_for_tz']} \n "
-                             f"{data['waiting_for_tz_steck']}", parse_mode="MarkdownV2")
+        await message.answer(f"{data['waiting_for_tz_title']} \n {data['waiting_for_tz']} \n "
+                             f"{data['waiting_for_tz_steck']}")
         await message.answer("Вы успешно создали ТЗ!")
         await state.finish()
 
@@ -189,7 +189,7 @@ async def delete_tz_no(call: types.CallbackQuery):
 async def view_vacant(message: types.Message):
     tz = await vacant_update(message.from_user.id)
     await message.answer(f"Ваша вакансия \n *Название*\n {tz[1]} \n *что нужно сделать*\n{tz[2]} \n *Стек*\n {tz[3]}",
-                         parse_mode="MarkdownV2")
+                         parse_mode="Markdown")
 
 
 @dp.message_handler(Text(equals=nav.work_resume))
@@ -235,12 +235,12 @@ async def tz_create(message: types.Message, state: FSMContext):
                     await message.answer(f" *Название задачи:* \n {tz_item[1]}"
                                          f"\n *Описание задачи:* \n {tz_item[2]}"
                                          f"\n *Технологический стек:* \n {tz_item[3]}",
-                                         reply_markup=nav.INKB_r, parse_mode="MarkdownV2")
+                                         reply_markup=nav.INKB_r, parse_mode="Markdown")
             except TypeError:
                 await message.answer(f" *Название задачи:* \n {tz_item[1]}"
                                      f"\n *Описание задачи:* \n {tz_item[2]}"
                                      f"\n *Технологический стек:* \n {tz_item[3]}",
-                                     reply_markup=nav.otclick(tz_item[4]), parse_mode="MarkdownV2")
+                                     reply_markup=nav.otclick(tz_item[4]), parse_mode="Markdown")
 
                 await state.finish()
     async with state.proxy() as data:
@@ -370,76 +370,10 @@ async def main_commands(message: types.Message):
         await bot.send_message(chat_id, f"зашел {message.from_user.username}")
 
 
-@dp.callback_query_handler(Text(equals="Овен"))
+@dp.callback_query_handler(Text(startswith='bb'))
 async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Овен", id=int(get_id_index()))
-    await call.message.answer(goro)
-
-
-@dp.callback_query_handler(Text(equals="Телец"))
-async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Телец", id=int(get_id_index()))
-    await call.message.answer(goro)
-
-
-@dp.callback_query_handler(Text(equals="Близнецы"))
-async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Близнецы", id=int(get_id_index()))
-    await call.message.answer(goro)
-
-
-@dp.callback_query_handler(Text(equals="Рак"))
-async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Рак", id=int(get_id_index()))
-    await call.message.answer(goro)
-
-
-@dp.callback_query_handler(Text(equals="Лев"))
-async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Лев", id=int(get_id_index()))
-    await call.message.answer(goro)
-
-
-@dp.callback_query_handler(Text(equals="Дева"))
-async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Дева", id=int(get_id_index()))
-    await call.message.answer(goro)
-
-
-@dp.callback_query_handler(Text(equals="Весы"))
-async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Весы", id=int(get_id_index()))
-    await call.message.answer(goro)
-
-
-@dp.callback_query_handler(Text(equals="Скорпион"))
-async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Скорпион", id=int(get_id_index()))
-    await call.message.answer(goro)
-
-
-@dp.callback_query_handler(Text(equals="Стрелец"))
-async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Стрелец", id=int(get_id_index()))
-    await call.message.answer(goro)
-
-
-@dp.callback_query_handler(Text(equals="Козерог"))
-async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Козерог", id=int(get_id_index()))
-    await call.message.answer(goro)
-
-
-@dp.callback_query_handler(Text(equals="Водолей"))
-async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Водолей", id=int(get_id_index()))
-    await call.message.answer(goro)
-
-
-@dp.callback_query_handler(Text(equals="Рыбы"))
-async def send_random_value(call: types.CallbackQuery):
-    goro = await get_connect_heroku_bd(zodiac="Рыбы", id=int(get_id_index()))
-    await call.message.answer(goro)
+    goro = await get_connect_heroku_bd(zodiac=call.data[2:], id=int(get_id_index()))
+    await call.message.answer(f"{ call.data[2:]} \n {goro}")
 
 
 @dp.message_handler(state=Form.city)
