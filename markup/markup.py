@@ -30,7 +30,7 @@ wetherMenu = ReplyKeyboardMarkup(resize_keyboard=True).add(button_wet, button_ba
 
 # goroskop menu
 button_gor = KeyboardButton('Получить гороскоп')
-goroskop_menu = ReplyKeyboardMarkup(resize_keyboard=True).add(button_gor, button_back)
+goroskop_menu = ReplyKeyboardMarkup(resize_keyboard=True).add(button_back)
 
 # inline buttom
 oven = "Овен"
@@ -76,11 +76,10 @@ button_tz = KeyboardButton(work_vacan)
 button_resume = KeyboardButton(work_resume)
 button_see_tz = KeyboardButton(search_vacan)
 button_see_resume = KeyboardButton(search_resume)
-button_ping = KeyboardButton('Отклики')
 menu_personal = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True).add(
     button_tz, button_resume,
     button_see_tz, button_see_resume,
-    button_ping, button_back
+    button_back
 )
 
 # обработка тз

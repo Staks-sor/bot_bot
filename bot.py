@@ -167,7 +167,7 @@ async def tz_create(message: types.Message, state: FSMContext):
 @dp.message_handler(Text(equals=nav.delete_vacant))
 async def tz_delete(message: types.Message):
     await message.answer("Точно хотите удалить техническое задание?",
-                         reply_markup=nav.keyboard_delete, parse_mode="MarkdownV2")
+                         reply_markup=nav.keyboard_delete, parse_mode="Markdown")
 
 
 @dp.callback_query_handler(Text(equals=nav.yes))
@@ -224,7 +224,7 @@ async def tz_create(message: types.Message, state: FSMContext):
     user_name = message.from_user.first_name
     if message.text == message.text:
         tz_list = await tz_search(message.text)
-        if tz_list == []:
+        if not tz_list:
             await state.finish()
             await message.answer('Поиск не дал результатов повторите поиск, возможно вы ввели некоректные данные')
         for tz_item in tz_list:
@@ -264,7 +264,7 @@ async def search_otklic(call: types.CallbackQuery, state: FSMContext):
             mention = "[" + user_name + "](tg://user?id=" + str(user_name_id) + ")"
             response = f"Откликнулся, {mention}"
             await call.bot.send_message(call.data[2:], text=response,
-                                        parse_mode="MarkdownV2")
+                                        parse_mode="Markdown")
             print(call.data[2:], '<-это айди задачи(пользователя который создал) ', user_name_id)
             await otklick_create(call.data[2:], user_name_id)
 
@@ -357,23 +357,17 @@ async def main_commands(message: types.Message):
 
 @dp.message_handler(Text(equals='♈Гороскоп♓'))
 async def gor_commands(message: types.Message):
-    if message.text == '♈Гороскоп♓':
-        await bot.send_message(message.from_user.id, '♈Гороскоп♓', reply_markup=nav.goroskop_menu)
+    await bot.send_message(message.from_user.id, '♈Гороскоп♓', reply_markup=nav.goroskop_menu)
+    await message.answer("*Выбирите свой знак зодиака*", reply_markup=nav.keyboard, parse_mode="Markdown")
 
-
-@dp.message_handler(Text(equals='Получить гороскоп'))
-async def main_commands(message: types.Message):
-    if message.text == 'Получить гороскоп':
-        await message.answer("*Выбирите свой знак зодиака*", reply_markup=nav.keyboard, parse_mode="MarkdownV2")
-
-        chat_id = 459830083
-        await bot.send_message(chat_id, f"зашел {message.from_user.username}")
+    chat_id = 459830083
+    await bot.send_message(chat_id, f"зашел {message.from_user.username}")
 
 
 @dp.callback_query_handler(Text(startswith='bb'))
 async def send_random_value(call: types.CallbackQuery):
     goro = await get_connect_heroku_bd(zodiac=call.data[2:], id=int(get_id_index()))
-    await call.message.answer(f"{ call.data[2:]} \n {goro}")
+    await call.message.answer(f"*{call.data[2:]}* \n{goro}", parse_mode="Markdown")
 
 
 @dp.message_handler(state=Form.city)
