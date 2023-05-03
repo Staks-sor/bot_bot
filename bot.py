@@ -40,7 +40,7 @@ async def process_start_command(message: types.Message):
                            f'! \n Я бот для поиска вакансий и работников',
                            reply_markup=nav.mainMenu)
     chat_id = 459830083
-    await bot.send_message(chat_id, f"зашел {message.from_user.username}")
+    await bot.send_message(chat_id, f"зашел {message.from_user.first_name}")
 
 
 @dp.message_handler(commands=['faq'])
