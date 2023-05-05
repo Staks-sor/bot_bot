@@ -28,6 +28,6 @@ for fl in os.listdir('/home/staks/PycharmProjects/bot_bot/vacan'):
         f.write(data)
         f.close()
 
-        time.sleep(0.25)
+        # time.sleep(0.25)
 
 print('Вакансии собраны')

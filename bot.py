@@ -33,6 +33,7 @@ class Form(StatesGroup):
     tz_search_tz = State()
 
 
+
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):
     await bot.send_message(message.from_user.id,
@@ -388,16 +389,20 @@ async def sending_messages():
     index = int(get_id_index())
     print(index, "Это индекс")
     while True:
-        time_now = datetime.now()
-        print(time_now.hour)
-        if time_now.hour == 4:
-            index += 1
-            await get_id(id=index)
-            print('Сменил значение', str(index))
-            chat_id = 459830083
-            await bot.send_message(chat_id, "Сменил значение на " + str(index))
-            await asyncio.sleep(3600)
-        await asyncio.sleep(500)
+        ...
+        # await asyncio.sleep(4)
+        # group_id = -1001982834593
+        # await bot.send_message(group_id, f"зашел {message.from_user.first_name}")
+        # time_now = datetime.now()
+        # print(time_now.hour)
+        # if time_now.hour == 4:
+        #     index += 1
+        #     await get_id(id=index)
+        #     print('Сменил значение', str(index))
+        #     chat_id = 459830083
+        #     await bot.send_message(chat_id, "Сменил значение на " + str(index))
+        #     await asyncio.sleep(3600)
+        # await asyncio.sleep(500)
 
 
 if __name__ == '__main__':
