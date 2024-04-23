@@ -33,7 +33,6 @@ class Form(StatesGroup):
     tz_search_tz = State()
 
 
-
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):
     await bot.send_message(message.from_user.id,
