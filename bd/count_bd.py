@@ -1,20 +1,21 @@
 import asyncio
-
 import psycopg2
-
 from bd.config import host, user, password, db_name, port
 
 
+def connect_to_postgres():
+    return psycopg2.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=db_name,
+        port=port
+    )
+
+
 async def get_connect_heroku_bd(zodiac, id):
-    global connection
     try:
-        connection = psycopg2.connect(
-            host=host,
-            user=user,
-            password=password,
-            database=db_name,
-            port=port
-        )
+        connection = connect_to_postgres()
         connection.autocommit = True
 
         with connection.cursor() as cursor:
@@ -25,25 +26,17 @@ async def get_connect_heroku_bd(zodiac, id):
             print(text_cursor_bd[0])
             return text_cursor_bd[0]
 
-    except Exception as _ex:
-        print("[INFO] Error while working with PostgreSQL", _ex)
+    except Exception as ex:
+        print("[INFO] Error while working with PostgreSQL: ", ex)
     finally:
-        if connection:
-            # cursor.close()
+        if 'connection' in locals():
             connection.close()
             print("[INFO] PostgreSQL connection closed")
 
 
 async def get_id(id=30):
-    global connection
     try:
-        connection = psycopg2.connect(
-            host=host,
-            user=user,
-            password=password,
-            database=db_name,
-            port=port
-        )
+        connection = connect_to_postgres()
         connection.autocommit = True
 
         with connection.cursor() as cursor:
@@ -51,13 +44,12 @@ async def get_id(id=30):
                 f"""UPDATE bot_id SET id = {id};"""
             )
 
-            print("[INFO] Data was succefully inserted")
+            print("[INFO] Data was successfully inserted")
 
-    except Exception as _ex:
-        print("[INFO] Error while working with PostgreSQL", _ex)
+    except Exception as ex:
+        print("[INFO] Error while working with PostgreSQL: ", ex)
     finally:
-        if connection:
-            # cursor.close()
+        if 'connection' in locals():
             connection.close()
             print("[INFO] PostgreSQL connection closed")
 
